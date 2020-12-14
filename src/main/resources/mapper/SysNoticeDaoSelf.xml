@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.changjianghuyu.qixia.web.dao.SysNoticeDaoSelf">
+
+    <resultMap type="com.changjianghuyu.qixia.web.entity.SysNotice" id="SysNoticeMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="images" column="images" jdbcType="VARCHAR"/>
+        <result property="beginTime" column="begin_time" jdbcType="TIMESTAMP"/>
+        <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
+        <result property="isTop" column="is_top" jdbcType="INTEGER"/>
+        <result property="timeUser" column="time_user" jdbcType="INTEGER"/>
+        <result property="dispOrder" column="disp_order" jdbcType="INTEGER"/>
+        <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="SysNoticeMap">
+        select
+        id, title, content, images, begin_time, end_time, is_top, time_user, disp_order, is_delete, create_time
+        from cjhy.sys_notice
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="title != null and title != ''">
+                and title like  concat('%',#{title},'%')
+            </if>
+            <if test="content != null and content != ''">
+                and content like  concat('%',#{content},'%')
+            </if>
+            <if test="images != null and images != ''">
+                and images = #{images}
+            </if>
+            <if test="beginTime != null">
+                and begin_time &gt; #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and end_time &lt; #{endTime}
+            </if>
+            <if test="isTop != null">
+                and is_top = #{isTop}
+            </if>
+            <if test="timeUser != null">
+               /* 是否使用时间范围：0：不使用 1：使用*/
+                and time_user = #{timeUser}
+            </if>
+            <if test="dispOrder != null">
+                and disp_order = #{dispOrder}
+            </if>
+            <if test="isDelete != null">
+                and is_delete = #{isDelete}
+            </if>
+            <if test="isDelete == null">
+                and is_delete = 0
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="userGetNoticeListByPage" resultMap="SysNoticeMap">
+    SELECT * FROM (
+        SELECT
+        id, title, content, images, begin_time, end_time, is_top, time_user, disp_order, is_delete, create_time
+        FROM cjhy.sys_notice
+        WHERE
+        time_user = 1
+        AND begin_time &lt;= NOW()
+        AND end_time &gt;= NOW()
+        AND is_delete = 0
+        UNION
+        SELECT
+        id, title, content, images, begin_time, end_time, is_top, time_user, disp_order, is_delete, create_time
+        FROM cjhy.sys_notice
+        WHERE
+        time_user = 0
+        AND is_delete = 0
+    ) a ORDER BY is_top DESC ,create_time DESC
+    </select>
+
+    <delete id="deleteByIds">
+        delete FROM sys_notice WHERE id IN
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

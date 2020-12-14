@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.changjianghuyu.qixia.web.dao.HyUserPunchClockDaoSelf">
+
+    <resultMap type="com.changjianghuyu.qixia.web.entity.HyUserPunchClock" id="HyUserPunchClockMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="clockLongitude" column="clock_longitude" jdbcType="OTHER"/>
+        <result property="clockLatitude" column="clock_latitude" jdbcType="OTHER"/>
+        <result property="beginTime" column="begin_time" jdbcType="OTHER"/>
+        <result property="endTime" column="end_time" jdbcType="OTHER"/>
+        <result property="clockStatus" column="clock_status" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="streetId" column="street_id" jdbcType="INTEGER"/>
+        <result property="villageId" column="village_id" jdbcType="INTEGER"/>
+        <result property="punchClockId" column="punch_clock_id" jdbcType="INTEGER"/>
+        <result property="punchClockLocationId" column="punch_clock_location_id" jdbcType="INTEGER"/>
+        <result property="punchClockTimeId" column="punch_clock_time_id" jdbcType="INTEGER"/>
+        <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap type="com.changjianghuyu.qixia.web.entity.HyUserPunchClockMap" id="clockMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="clockLongitude" column="clock_longitude" jdbcType="OTHER"/>
+        <result property="clockLatitude" column="clock_latitude" jdbcType="OTHER"/>
+        <result property="beginTime" column="begin_time" jdbcType="OTHER"/>
+        <result property="endTime" column="end_time" jdbcType="OTHER"/>
+        <result property="clockStatus" column="clock_status" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="streetId" column="street_id" jdbcType="INTEGER"/>
+        <result property="villageId" column="village_id" jdbcType="INTEGER"/>
+        <result property="punchClockId" column="punch_clock_id" jdbcType="INTEGER"/>
+        <result property="punchClockLocationId" column="punch_clock_location_id" jdbcType="INTEGER"/>
+        <result property="punchClockTimeId" column="punch_clock_time_id" jdbcType="INTEGER"/>
+        <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="clockAddressName" column="clock_address_name" jdbcType="VARCHAR"/>
+        <result property="street" column="street" jdbcType="VARCHAR"/>
+        <result property="village" column="village" jdbcType="VARCHAR"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="HyUserPunchClockMap">
+        select
+        id, clock_longitude, clock_latitude, begin_time, end_time, clock_status, user_id, street_id, village_id,
+        punch_clock_id, punch_clock_location_id, punch_clock_time_id, is_delete, create_time
+        from cjhy.hy_user_punch_clock
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="clockLongitude != null">
+                and clock_longitude = #{clockLongitude}
+            </if>
+            <if test="clockLatitude != null">
+                and clock_latitude = #{clockLatitude}
+            </if>
+            <if test="beginTime != null">
+                and begin_time = #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and end_time = #{endTime}
+            </if>
+            <if test="clockStatus != null">
+                and clock_status = #{clockStatus}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="streetId != null">
+                and street_id = #{streetId}
+            </if>
+            <if test="villageId != null">
+                and village_id = #{villageId}
+            </if>
+            <if test="punchClockId != null">
+                and punch_clock_id = #{punchClockId}
+            </if>
+            <if test="punchClockLocationId != null">
+                and punch_clock_location_id = #{punchClockLocationId}
+            </if>
+            <if test="punchClockTimeId != null">
+                and punch_clock_time_id = #{punchClockTimeId}
+            </if>
+            <if test="isDelete != null">
+                and is_delete = #{isDelete}
+            </if>
+            <if test="isDelete == null">
+                and is_delete = 0
+            </if>
+            <if test="createTime != null">
+                and DATE_FORMAT(create_time ,"%Y-%m-%d")= DATE_FORMAT(#{createTime} ,"%Y-%m-%d")
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="getTodayList" resultMap="HyUserPunchClockMap">
+        select
+        id, clock_longitude, clock_latitude, begin_time, end_time, clock_status, user_id, street_id, village_id,
+        punch_clock_id, punch_clock_location_id, punch_clock_time_id, is_delete, create_time
+        from cjhy.hy_user_punch_clock
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="clockLongitude != null">
+                and clock_longitude = #{clockLongitude}
+            </if>
+            <if test="clockLatitude != null">
+                and clock_latitude = #{clockLatitude}
+            </if>
+            <if test="beginTime != null">
+                and begin_time = #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and end_time = #{endTime}
+            </if>
+            <if test="clockStatus != null">
+                and clock_status = #{clockStatus}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="streetId != null">
+                and street_id = #{streetId}
+            </if>
+            <if test="villageId != null">
+                and village_id = #{villageId}
+            </if>
+            <if test="punchClockId != null">
+                and punch_clock_id = #{punchClockId}
+            </if>
+            <if test="punchClockLocationId != null">
+                and punch_clock_location_id = #{punchClockLocationId}
+            </if>
+            <if test="punchClockTimeId != null">
+                and punch_clock_time_id = #{punchClockTimeId}
+            </if>
+            <if test="isDelete != null">
+                and is_delete = #{isDelete}
+            </if>
+            <if test="createTime != null">
+                and DATE_FORMAT(create_time,"%Y-%m-%d") = DATE_FORMAT(#{createTime},"%Y-%m-%d")
+            </if>
+        </where>
+    </select>
+
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="getUserClockCensusList" resultMap="clockMap" parameterType="com.changjianghuyu.qixia.web.entity.HyUserPunchClock">
+        SELECT
+        t1.id,
+        t1.clock_longitude,
+        t1.clock_latitude,
+        t1.begin_time,
+        t1.end_time,
+        t1.clock_status,
+        t1.user_id,
+        t1.street_id,
+        t1.village_id,
+        t1.punch_clock_id,
+        t1.punch_clock_location_id,
+        t1.punch_clock_time_id,
+        t1.is_delete,
+        t1.create_time,
+        t2.clock_address_name,
+        (SELECT area_name FROM sys_area WHERE id = t1.street_id) street,
+        (SELECT area_name FROM sys_area WHERE id = t1.village_id) village,
+        (SELECT user_name FROM hy_user WHERE id = t1.user_id) AS user_name
+        FROM hy_user_punch_clock t1
+        LEFT JOIN hy_punch_clock t2 ON t1.punch_clock_id = t2.id
+        <where>
+            <if test="id != null">
+                and t1.id = #{id}
+            </if>
+            <if test="clockLongitude != null">
+                and t1.clock_longitude = #{clockLongitude}
+            </if>
+            <if test="clockLatitude != null">
+                and t1.clock_latitude = #{clockLatitude}
+            </if>
+            <if test="beginTime != null">
+                and t1.begin_time = #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and t1.end_time = #{endTime}
+            </if>
+            <if test="clockStatus != null">
+                and t1.clock_status = #{clockStatus}
+            </if>
+            <if test="userId != null">
+                and t1.user_id = #{userId}
+            </if>
+            <if test="streetId != null">
+                and t1.street_id = #{streetId}
+            </if>
+            <if test="villageId != null">
+                and t1.village_id = #{villageId}
+            </if>
+            <if test="punchClockId != null">
+                and t1.punch_clock_id = #{punchClockId}
+            </if>
+            <if test="punchClockLocationId != null">
+                and t1.punch_clock_location_id = #{punchClockLocationId}
+            </if>
+            <if test="punchClockTimeId != null">
+                and t1.punch_clock_time_id = #{punchClockTimeId}
+            </if>
+            <if test="isDelete != null">
+                and t1.is_delete = #{isDelete}
+            </if>
+            <if test="isDelete == null">
+                and t1.is_delete = 0
+            </if>
+            <if test="createTime != null">
+                and DATE_FORMAT(t1.create_time ,"%Y-%m-%d")= DATE_FORMAT(#{createTime} ,"%Y-%m-%d")
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+</mapper>

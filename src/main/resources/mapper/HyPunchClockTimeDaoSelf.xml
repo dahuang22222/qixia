@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.changjianghuyu.qixia.web.dao.HyPunchClockTimeDaoSelf">
+
+    <resultMap type="com.changjianghuyu.qixia.web.entity.HyPunchClockTime" id="HyPunchClockTimeMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="punchClockLocationId" column="punch_clock_location_id" jdbcType="INTEGER"/>
+        <result property="beginTime" column="begin_time" jdbcType="OTHER"/>
+        <result property="endTime" column="end_time" jdbcType="OTHER"/>
+        <result property="clockR" column="clock_r" jdbcType="OTHER"/>
+        <result property="streetId" column="street_id" jdbcType="INTEGER"/>
+        <result property="street" column="street" jdbcType="VARCHAR"/>
+        <result property="villageId" column="village_id" jdbcType="INTEGER"/>
+        <result property="village" column="village" jdbcType="VARCHAR"/>
+        <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="HyPunchClockTimeMap">
+        select
+        id, punch_clock_location_id, begin_time, end_time, clock_r, street_id, street, village_id, village, is_delete,
+        create_time
+        from cjhy.hy_punch_clock_time
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="punchClockLocationId != null">
+                and punch_clock_location_id = #{punchClockLocationId}
+            </if>
+            <if test="beginTime != null">
+                and begin_time &gt; #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and end_time &lt; #{endTime}
+            </if>
+            <if test="clockR != null">
+                and clock_r = #{clockR}
+            </if>
+            <if test="streetId != null">
+                and street_id = #{streetId}
+            </if>
+            <if test="street != null and street != ''">
+                and street like  concat('%',#{street},'%')
+            </if>
+            <if test="villageId != null">
+                and village_id = #{villageId}
+            </if>
+            <if test="village != null and village != ''">
+                and village like  concat('%',#{village},'%')
+            </if>
+            <if test="isDelete != null">
+                and is_delete = #{isDelete}
+            </if>
+            <if test="isDelete == null">
+                and is_delete = 0
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByIds" parameterType="arraylist">
+        DELETE  FROM hy_punch_clock_time WHERE id IN
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

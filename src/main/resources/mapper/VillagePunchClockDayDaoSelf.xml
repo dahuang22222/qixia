@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.changjianghuyu.qixia.web.dao.VillagePunchClockDayDaoSelf">
+
+    <resultMap type="com.changjianghuyu.qixia.web.entity.VillagePunchClockDay" id="VillagePunchClockDayMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="villageId" column="village_id" jdbcType="INTEGER"/>
+        <result property="village" column="village" jdbcType="VARCHAR"/>
+        <result property="streetId" column="street_id" jdbcType="INTEGER"/>
+        <result property="street" column="street" jdbcType="VARCHAR"/>
+        <result property="clockDate" column="clock_date" jdbcType="TIMESTAMP"/>
+        <result property="clockStatus" column="clock_status" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="VillagePunchClockDayMap">
+        select
+        id, village_id, village, street_id, street, clock_date, clock_status, user_id, is_delete, create_time
+        from cjhy.village_punch_clock_day
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="villageId != null">
+                and village_id = #{villageId}
+            </if>
+            <if test="village != null and village != ''">
+                and village like  concat('%',#{village},'%')
+            </if>
+            <if test="streetId != null">
+                and street_id = #{streetId}
+            </if>
+            <if test="street != null and street != ''">
+                and street like  concat('%', #{street},'%')
+            </if>
+            <if test="clockDate != null">
+                and clock_date = #{clockDate}
+            </if>
+            <if test="clockStatus != null">
+                and clock_status = #{clockStatus}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="isDelete != null">
+                and is_delete = #{isDelete}
+            </if>
+            <if test="isDelete == null">
+                and is_delete = 0
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="getVillagePunchClockDayListByTime" resultType="map" parameterType="map">
+       SELECT
+        village_id villageId, village, street_id streetId, street, clock_date clockDate, COUNT(0) clockTimes
+        FROM village_punch_clock_day
+        WHERE clock_status = 1
+        <if test="clockDate != null">
+            AND DATE_FORMAT(clock_date ,"%Y-%m")= #{clockDate}
+        </if>
+        <if test="clockDate == null">
+            AND DATE_FORMAT(clock_date ,"%Y-%m")= DATE_FORMAT(NOW() ,"%Y-%m")
+        </if>
+        <if test="streetId != null">
+            and street_id = #{streetId}
+        </if>
+        <if test="villageId != null">
+            and village_id = #{villageId}
+        </if>
+        GROUP BY village_id
+        ORDER BY create_time desc
+    </select>
+</mapper>

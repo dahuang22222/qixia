@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.changjianghuyu.qixia.web.dao.HyInformationFeedbackDao">
+
+    <resultMap type="com.changjianghuyu.qixia.web.entity.HyInformationFeedback" id="HyInformationFeedbackMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="provideUserId" column="provide_user_id" jdbcType="INTEGER"/>
+        <result property="provideName" column="provide_name" jdbcType="VARCHAR"/>
+        <result property="provideTime" column="provide_time" jdbcType="TIMESTAMP"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="images" column="images" jdbcType="VARCHAR"/>
+        <result property="remarks" column="remarks" jdbcType="VARCHAR"/>
+        <result property="streetId" column="street_id" jdbcType="INTEGER"/>
+        <result property="street" column="street" jdbcType="VARCHAR"/>
+        <result property="villageId" column="village_id" jdbcType="INTEGER"/>
+        <result property="village" column="village" jdbcType="VARCHAR"/>
+        <result property="handlingOpinions" column="handling_opinions" jdbcType="VARCHAR"/>
+        <result property="handlingUserId" column="handling_user_id" jdbcType="INTEGER"/>
+        <result property="handlingUserName" column="handling_user_name" jdbcType="VARCHAR"/>
+        <result property="handlingTime" column="handling_time" jdbcType="TIMESTAMP"/>
+        <result property="feedbackLongitude" column="feedback_longitude" jdbcType="OTHER"/>
+        <result property="feedbackLatitude" column="feedback_latitude" jdbcType="OTHER"/>
+        <result property="feedbackAddress" column="feedback_address" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="HyInformationFeedbackMap">
+        select
+          id, provide_user_id, provide_name, provide_time, content, images, remarks, street_id, street, village_id, village, handling_opinions, handling_user_id, handling_user_name, handling_time, feedback_longitude, feedback_latitude, feedback_address, status, is_delete, create_time
+        from cjhy.hy_information_feedback
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="HyInformationFeedbackMap">
+        select
+          id, provide_user_id, provide_name, provide_time, content, images, remarks, street_id, street, village_id, village, handling_opinions, handling_user_id, handling_user_name, handling_time, feedback_longitude, feedback_latitude, feedback_address, status, is_delete, create_time
+        from cjhy.hy_information_feedback
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="HyInformationFeedbackMap">
+        select
+        id, provide_user_id, provide_name, provide_time, content, images, remarks, street_id, street, village_id,
+        village, handling_opinions, handling_user_id, handling_user_name, handling_time, feedback_longitude,
+        feedback_latitude, feedback_address, status, is_delete, create_time
+        from cjhy.hy_information_feedback
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="provideUserId != null">
+                and provide_user_id = #{provideUserId}
+            </if>
+            <if test="provideName != null and provideName != ''">
+                and provide_name = #{provideName}
+            </if>
+            <if test="provideTime != null">
+                and provide_time = #{provideTime}
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="images != null and images != ''">
+                and images = #{images}
+            </if>
+            <if test="remarks != null and remarks != ''">
+                and remarks = #{remarks}
+            </if>
+            <if test="streetId != null">
+                and street_id = #{streetId}
+            </if>
+            <if test="street != null and street != ''">
+                and street = #{street}
+            </if>
+            <if test="villageId != null">
+                and village_id = #{villageId}
+            </if>
+            <if test="village != null and village != ''">
+                and village = #{village}
+            </if>
+            <if test="handlingOpinions != null and handlingOpinions != ''">
+                and handling_opinions = #{handlingOpinions}
+            </if>
+            <if test="handlingUserId != null">
+                and handling_user_id = #{handlingUserId}
+            </if>
+            <if test="handlingUserName != null and handlingUserName != ''">
+                and handling_user_name = #{handlingUserName}
+            </if>
+            <if test="handlingTime != null">
+                and handling_time = #{handlingTime}
+            </if>
+            <if test="feedbackLongitude != null">
+                and feedback_longitude = #{feedbackLongitude}
+            </if>
+            <if test="feedbackLatitude != null">
+                and feedback_latitude = #{feedbackLatitude}
+            </if>
+            <if test="feedbackAddress != null and feedbackAddress != ''">
+                and feedback_address = #{feedbackAddress}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="isDelete != null">
+                and is_delete = #{isDelete}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into cjhy.hy_information_feedback(provide_user_id, provide_name, provide_time, content, images, remarks, street_id, street, village_id, village, handling_opinions, handling_user_id, handling_user_name, handling_time, feedback_longitude, feedback_latitude, feedback_address, status, is_delete, create_time)
+        values (#{provideUserId}, #{provideName}, #{provideTime}, #{content}, #{images}, #{remarks}, #{streetId}, #{street}, #{villageId}, #{village}, #{handlingOpinions}, #{handlingUserId}, #{handlingUserName}, #{handlingTime}, #{feedbackLongitude}, #{feedbackLatitude}, #{feedbackAddress}, #{status}, #{isDelete}, #{createTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into cjhy.hy_information_feedback(provide_user_id, provide_name, provide_time, content, images, remarks,
+        street_id, street, village_id, village, handling_opinions, handling_user_id, handling_user_name, handling_time,
+        feedback_longitude, feedback_latitude, feedback_address, status, is_delete, create_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.provideUserId}, #{entity.provideName}, #{entity.provideTime}, #{entity.content}, #{entity.images},
+            #{entity.remarks}, #{entity.streetId}, #{entity.street}, #{entity.villageId}, #{entity.village},
+            #{entity.handlingOpinions}, #{entity.handlingUserId}, #{entity.handlingUserName}, #{entity.handlingTime},
+            #{entity.feedbackLongitude}, #{entity.feedbackLatitude}, #{entity.feedbackAddress}, #{entity.status},
+            #{entity.isDelete}, #{entity.createTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into cjhy.hy_information_feedback(provide_user_id, provide_name, provide_time, content, images, remarks,
+        street_id, street, village_id, village, handling_opinions, handling_user_id, handling_user_name, handling_time,
+        feedback_longitude, feedback_latitude, feedback_address, status, is_delete, create_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.provideUserId}, #{entity.provideName}, #{entity.provideTime}, #{entity.content}, #{entity.images},
+            #{entity.remarks}, #{entity.streetId}, #{entity.street}, #{entity.villageId}, #{entity.village},
+            #{entity.handlingOpinions}, #{entity.handlingUserId}, #{entity.handlingUserName}, #{entity.handlingTime},
+            #{entity.feedbackLongitude}, #{entity.feedbackLatitude}, #{entity.feedbackAddress}, #{entity.status},
+            #{entity.isDelete}, #{entity.createTime})
+        </foreach>
+        on duplicate key update
+        provide_user_id = values(provide_user_id) , provide_name = values(provide_name) , provide_time =
+        values(provide_time) , content = values(content) , images = values(images) , remarks = values(remarks) ,
+        street_id = values(street_id) , street = values(street) , village_id = values(village_id) , village =
+        values(village) , handling_opinions = values(handling_opinions) , handling_user_id = values(handling_user_id) ,
+        handling_user_name = values(handling_user_name) , handling_time = values(handling_time) , feedback_longitude =
+        values(feedback_longitude) , feedback_latitude = values(feedback_latitude) , feedback_address =
+        values(feedback_address) , status = values(status) , is_delete = values(is_delete) , create_time =
+        values(create_time)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update cjhy.hy_information_feedback
+        <set>
+            <if test="provideUserId != null">
+                provide_user_id = #{provideUserId},
+            </if>
+            <if test="provideName != null and provideName != ''">
+                provide_name = #{provideName},
+            </if>
+            <if test="provideTime != null">
+                provide_time = #{provideTime},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="images != null and images != ''">
+                images = #{images},
+            </if>
+            <if test="remarks != null and remarks != ''">
+                remarks = #{remarks},
+            </if>
+            <if test="streetId != null">
+                street_id = #{streetId},
+            </if>
+            <if test="street != null and street != ''">
+                street = #{street},
+            </if>
+            <if test="villageId != null">
+                village_id = #{villageId},
+            </if>
+            <if test="village != null and village != ''">
+                village = #{village},
+            </if>
+            <if test="handlingOpinions != null and handlingOpinions != ''">
+                handling_opinions = #{handlingOpinions},
+            </if>
+            <if test="handlingUserId != null">
+                handling_user_id = #{handlingUserId},
+            </if>
+            <if test="handlingUserName != null and handlingUserName != ''">
+                handling_user_name = #{handlingUserName},
+            </if>
+            <if test="handlingTime != null">
+                handling_time = #{handlingTime},
+            </if>
+            <if test="feedbackLongitude != null">
+                feedback_longitude = #{feedbackLongitude},
+            </if>
+            <if test="feedbackLatitude != null">
+                feedback_latitude = #{feedbackLatitude},
+            </if>
+            <if test="feedbackAddress != null and feedbackAddress != ''">
+                feedback_address = #{feedbackAddress},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="isDelete != null">
+                is_delete = #{isDelete},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from cjhy.hy_information_feedback where id = #{id}
+    </delete>
+
+</mapper>

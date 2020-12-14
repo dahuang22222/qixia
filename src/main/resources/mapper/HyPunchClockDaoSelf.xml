@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.changjianghuyu.qixia.web.dao.HyPunchClockDaoSelf">
+
+    <resultMap type="com.changjianghuyu.qixia.web.entity.HyPunchClock" id="HyPunchClockMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="clockLongitude" column="clock_longitude" jdbcType="OTHER"/>
+        <result property="clockLatitude" column="clock_latitude" jdbcType="OTHER"/>
+        <result property="clockAddressName" column="clock_address_name" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="clockTime" column="clock_time" jdbcType="TIMESTAMP"/>
+        <result property="clockStatus" column="clock_status" jdbcType="INTEGER"/>
+        <result property="streetId" column="street_id" jdbcType="INTEGER"/>
+        <result property="street" column="street" jdbcType="VARCHAR"/>
+        <result property="villageId" column="village_id" jdbcType="INTEGER"/>
+        <result property="village" column="village" jdbcType="VARCHAR"/>
+        <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="punchClockLocationId" column="punch_clock_location_id" jdbcType="INTEGER"/>
+        <result property="punchClockTimeId" column="punch_clock_time_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="HyPunchClockMap">
+        select
+        id, clock_longitude, clock_latitude, clock_address_name, user_id, clock_time, clock_status, street_id, street,
+        village_id, village, is_delete, create_time, punch_clock_location_id, punch_clock_time_id
+        from cjhy.hy_punch_clock
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="clockLongitude != null">
+                and clock_longitude = #{clockLongitude}
+            </if>
+            <if test="clockLatitude != null">
+                and clock_latitude = #{clockLatitude}
+            </if>
+            <if test="clockAddressName != null and clockAddressName != ''">
+                and clock_address_name like  concat('%', #{clockAddressName},'%')
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="clockTime != null">
+                and DATE_FORMAT(clock_time ,"%Y-%m-%d")= DATE_FORMAT(#{clockTime} ,"%Y-%m-%d")
+            </if>
+            <if test="streetId != null">
+                and street_id = #{streetId}
+            </if>
+            <if test="villageId != null">
+                and village_id = #{villageId}
+            </if>
+            <if test="punchClockLocationId != null">
+                and punch_clock_location_id = #{punchClockLocationId}
+            </if>
+            <if test="punchClockTimeId != null">
+                and punch_clock_time_id = #{punchClockTimeId}
+            </if>
+        </where>
+        order by punch_clock_location_id,clock_time desc
+    </select>
+
+
+    <!--通过实体最近两小时的打卡记录-->
+    <select id="queryAllNearTwoHour" resultMap="HyPunchClockMap">
+        select
+        id, clock_longitude, clock_latitude, clock_address_name, user_id, clock_time, clock_status, street_id, street,
+        village_id, village, is_delete, create_time, punch_clock_location_id, punch_clock_time_id
+        from cjhy.hy_punch_clock
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="clockTime != null">
+                and clock_time between DATE_ADD(#{clockTime}, INTERVAL -2 HOUR) and DATE_ADD(#{clockTime}, INTERVAL 2 HOUR)
+            </if>
+            <if test="clockStatus != null">
+                and clock_status = #{clockStatus}
+            </if>
+            <if test="streetId != null">
+                and street_id = #{streetId}
+            </if>
+            <if test="street != null and street != ''">
+                and street like  concat('%', #{street},'%')
+            </if>
+            <if test="villageId != null">
+                and village_id = #{villageId}
+            </if>
+            <if test="village != null and village != ''">
+                and village like  concat('%', #{village},'%')
+            </if>
+            <if test="isDelete != null">
+                and is_delete = #{isDelete}
+            </if>
+            <if test="isDelete == null">
+                and is_delete = 0
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="punchClockLocationId != null">
+                and punch_clock_location_id = #{punchClockLocationId}
+            </if>
+            <if test="punchClockTimeId != null">
+                and punch_clock_time_id = #{punchClockTimeId}
+            </if>
+        </where>
+        order by punch_clock_location_id,clock_time desc
+    </select>
+</mapper>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.changjianghuyu.qixia.web.dao.HyUserDao">
+
+    <resultMap type="com.changjianghuyu.qixia.web.entity.HyUser" id="HyUserMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="userType" column="user_type" jdbcType="INTEGER"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="weichatNumber" column="weichat_number" jdbcType="VARCHAR"/>
+        <result property="qqNumber" column="qq_number" jdbcType="VARCHAR"/>
+        <result property="profession" column="profession" jdbcType="VARCHAR"/>
+        <result property="image" column="image" jdbcType="VARCHAR"/>
+        <result property="age" column="age" jdbcType="INTEGER"/>
+        <result property="street" column="street" jdbcType="VARCHAR"/>
+        <result property="village" column="village" jdbcType="VARCHAR"/>
+        <result property="streetId" column="street_id" jdbcType="INTEGER"/>
+        <result property="villageId" column="village_id" jdbcType="INTEGER"/>
+        <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="HyUserMap">
+        select
+          id, user_name, nickname, user_type, phone, weichat_number, qq_number, profession, image, age, street, village, street_id, village_id, is_delete, create_time, password
+        from cjhy.hy_user
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="HyUserMap">
+        select
+          id, user_name, nickname, user_type, phone, weichat_number, qq_number, profession, image, age, street, village, street_id, village_id, is_delete, create_time, password
+        from cjhy.hy_user
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="HyUserMap">
+        select
+        id, user_name, nickname, user_type, phone, weichat_number, qq_number, profession, image, age, street, village,
+        street_id, village_id, is_delete, create_time, password
+        from cjhy.hy_user
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="userName != null and userName != ''">
+                and user_name = #{userName}
+            </if>
+            <if test="nickname != null and nickname != ''">
+                and nickname = #{nickname}
+            </if>
+            <if test="userType != null">
+                and user_type = #{userType}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="weichatNumber != null and weichatNumber != ''">
+                and weichat_number = #{weichatNumber}
+            </if>
+            <if test="qqNumber != null and qqNumber != ''">
+                and qq_number = #{qqNumber}
+            </if>
+            <if test="profession != null and profession != ''">
+                and profession = #{profession}
+            </if>
+            <if test="image != null and image != ''">
+                and image = #{image}
+            </if>
+            <if test="age != null">
+                and age = #{age}
+            </if>
+            <if test="street != null and street != ''">
+                and street = #{street}
+            </if>
+            <if test="village != null and village != ''">
+                and village = #{village}
+            </if>
+            <if test="streetId != null">
+                and street_id = #{streetId}
+            </if>
+            <if test="villageId != null">
+                and village_id = #{villageId}
+            </if>
+            <if test="isDelete != null">
+                and is_delete = #{isDelete}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into cjhy.hy_user(user_name, nickname, user_type, phone, weichat_number, qq_number, profession, image, age, street, village, street_id, village_id, is_delete, create_time, password)
+        values (#{userName}, #{nickname}, #{userType}, #{phone}, #{weichatNumber}, #{qqNumber}, #{profession}, #{image}, #{age}, #{street}, #{village}, #{streetId}, #{villageId}, #{isDelete}, #{createTime}, #{password})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into cjhy.hy_user(user_name, nickname, user_type, phone, weichat_number, qq_number, profession, image,
+        age, street, village, street_id, village_id, is_delete, create_time, password)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userName}, #{entity.nickname}, #{entity.userType}, #{entity.phone}, #{entity.weichatNumber},
+            #{entity.qqNumber}, #{entity.profession}, #{entity.image}, #{entity.age}, #{entity.street},
+            #{entity.village}, #{entity.streetId}, #{entity.villageId}, #{entity.isDelete}, #{entity.createTime},
+            #{entity.password})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into cjhy.hy_user(user_name, nickname, user_type, phone, weichat_number, qq_number, profession, image,
+        age, street, village, street_id, village_id, is_delete, create_time, password)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userName}, #{entity.nickname}, #{entity.userType}, #{entity.phone}, #{entity.weichatNumber},
+            #{entity.qqNumber}, #{entity.profession}, #{entity.image}, #{entity.age}, #{entity.street},
+            #{entity.village}, #{entity.streetId}, #{entity.villageId}, #{entity.isDelete}, #{entity.createTime},
+            #{entity.password})
+        </foreach>
+        on duplicate key update
+        user_name = values(user_name) , nickname = values(nickname) , user_type = values(user_type) , phone =
+        values(phone) , weichat_number = values(weichat_number) , qq_number = values(qq_number) , profession =
+        values(profession) , image = values(image) , age = values(age) , street = values(street) , village =
+        values(village) , street_id = values(street_id) , village_id = values(village_id) , is_delete =
+        values(is_delete) , create_time = values(create_time) , password = values(password)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update cjhy.hy_user
+        <set>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName},
+            </if>
+            <if test="nickname != null and nickname != ''">
+                nickname = #{nickname},
+            </if>
+            <if test="userType != null">
+                user_type = #{userType},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="weichatNumber != null and weichatNumber != ''">
+                weichat_number = #{weichatNumber},
+            </if>
+            <if test="qqNumber != null and qqNumber != ''">
+                qq_number = #{qqNumber},
+            </if>
+            <if test="profession != null and profession != ''">
+                profession = #{profession},
+            </if>
+            <if test="image != null and image != ''">
+                image = #{image},
+            </if>
+            <if test="age != null">
+                age = #{age},
+            </if>
+            <if test="street != null and street != ''">
+                street = #{street},
+            </if>
+            <if test="village != null and village != ''">
+                village = #{village},
+            </if>
+            <if test="streetId != null">
+                street_id = #{streetId},
+            </if>
+            <if test="villageId != null">
+                village_id = #{villageId},
+            </if>
+            <if test="isDelete != null">
+                is_delete = #{isDelete},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from cjhy.hy_user where id = #{id}
+    </delete>
+
+</mapper>

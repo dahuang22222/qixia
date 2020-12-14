@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.changjianghuyu.qixia.web.dao.HyInformationFeedbackDaoSelf">
+
+    <resultMap type="com.changjianghuyu.qixia.web.entity.HyInformationFeedback" id="HyInformationFeedbackMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="provideUserId" column="provide_user_id" jdbcType="INTEGER"/>
+        <result property="provideName" column="provide_name" jdbcType="VARCHAR"/>
+        <result property="provideTime" column="provide_time" jdbcType="TIMESTAMP"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="images" column="images" jdbcType="VARCHAR"/>
+        <result property="remarks" column="remarks" jdbcType="VARCHAR"/>
+        <result property="streetId" column="street_id" jdbcType="INTEGER"/>
+        <result property="street" column="street" jdbcType="VARCHAR"/>
+        <result property="villageId" column="village_id" jdbcType="INTEGER"/>
+        <result property="village" column="village" jdbcType="VARCHAR"/>
+        <result property="handlingOpinions" column="handling_opinions" jdbcType="VARCHAR"/>
+        <result property="handlingUserId" column="handling_user_id" jdbcType="INTEGER"/>
+        <result property="handlingUserName" column="handling_user_name" jdbcType="VARCHAR"/>
+        <result property="handlingTime" column="handling_time" jdbcType="TIMESTAMP"/>
+        <result property="feedbackLongitude" column="feedback_longitude" jdbcType="OTHER"/>
+        <result property="feedbackLatitude" column="feedback_latitude" jdbcType="OTHER"/>
+        <result property="feedbackAddress" column="feedback_address" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="HyInformationFeedbackMap">
+        select
+        id, provide_user_id, provide_name, provide_time, content, images, remarks, street_id, street, village_id,
+        village, handling_opinions, handling_user_id, handling_user_name, handling_time, feedback_longitude,
+        feedback_latitude, feedback_address, status, is_delete, create_time
+        from cjhy.hy_information_feedback
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="provideUserId != null">
+                and provide_user_id = #{provideUserId}
+            </if>
+            <if test="provideName != null and provideName != ''">
+                and provide_name like  concat('%', #{provideName},'%')
+            </if>
+            <if test="provideTime != null">
+                and  DATE_FORMAT(provide_time ,"%Y-%m-%d")= DATE_FORMAT(#{provideTime} ,"%Y-%m-%d")
+            </if>
+            <if test="content != null and content != ''">
+                and content like  concat('%', #{content},'%')
+            </if>
+            <if test="images != null and images != ''">
+                and images = #{images}
+            </if>
+            <if test="remarks != null and remarks != ''">
+                and remarks  like  concat('%', #{remarks},'%')
+            </if>
+            <if test="streetId != null">
+                and street_id = #{streetId}
+            </if>
+            <if test="street != null and street != ''">
+                and street like  concat('%',  #{street},'%')
+            </if>
+            <if test="villageId != null">
+                and village_id = #{villageId}
+            </if>
+            <if test="village != null and village != ''">
+                and village  like  concat('%', #{village},'%')
+            </if>
+            <if test="handlingOpinions != null and handlingOpinions != ''">
+                and handling_opinions  like  concat('%',  #{handlingOpinions},'%')
+            </if>
+            <if test="handlingUserId != null">
+                and handling_user_id = #{handlingUserId}
+            </if>
+            <if test="handlingUserName != null and handlingUserName != ''">
+                and handling_user_name  like  concat('%',   #{handlingUserName},'%')
+            </if>
+            <if test="handlingTime != null">
+                and DATE_FORMAT(handling_time ,"%Y-%m-%d")= DATE_FORMAT( #{handlingTime} ,"%Y-%m-%d")
+            </if>
+            <if test="feedbackLongitude != null">
+                and feedback_longitude = #{feedbackLongitude}
+            </if>
+            <if test="feedbackLatitude != null">
+                and feedback_latitude = #{feedbackLatitude}
+            </if>
+            <if test="feedbackAddress != null and feedbackAddress != ''">
+                and feedback_address like  concat('%',  #{feedbackAddress},'%')
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="isDelete != null">
+                and is_delete = #{isDelete}
+            </if>
+            <if test="isDelete == null">
+                and is_delete = 0
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+        </where>
+        order by provide_time desc,handling_time desc
+    </select>
+
+    <delete id="deleteByIds">
+        delete FROM hy_information_feedback WHERE id IN
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

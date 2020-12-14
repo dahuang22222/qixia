@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.changjianghuyu.qixia.web.dao.HyPunchClockLocationDaoSelf">
+
+    <resultMap type="com.changjianghuyu.qixia.web.entity.HyPunchClockLocation" id="HyPunchClockLocationMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="addressName" column="address_name" jdbcType="VARCHAR"/>
+        <result property="clockLongitude" column="clock_longitude" jdbcType="OTHER"/>
+        <result property="clockLatitude" column="clock_latitude" jdbcType="OTHER"/>
+        <result property="clockR" column="clock_r" jdbcType="OTHER"/>
+        <result property="streetId" column="street_id" jdbcType="INTEGER"/>
+        <result property="street" column="street" jdbcType="VARCHAR"/>
+        <result property="villageId" column="village_id" jdbcType="INTEGER"/>
+        <result property="village" column="village" jdbcType="VARCHAR"/>
+        <result property="dispOrder" column="disp_order" jdbcType="INTEGER"/>
+        <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="HyPunchClockLocationMap">
+        select
+        id, address_name, clock_longitude, clock_latitude, clock_r, street_id, street, village_id, village, disp_order,
+        is_delete, create_time
+        from cjhy.hy_punch_clock_location
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="addressName != null and addressName != ''">
+                and address_name = like  concat('%',  #{addressName},'%')
+            </if>
+            <if test="clockLongitude != null">
+                and clock_longitude = #{clockLongitude}
+            </if>
+            <if test="clockLatitude != null">
+                and clock_latitude = #{clockLatitude}
+            </if>
+            <if test="clockR != null">
+                and clock_r = #{clockR}
+            </if>
+            <if test="streetId != null">
+                and street_id = #{streetId}
+            </if>
+            <if test="street != null and street != ''">
+                and street like  concat('%',  #{street},'%')
+            </if>
+            <if test="villageId != null">
+                and village_id = #{villageId}
+            </if>
+            <if test="village != null and village != ''">
+                and village like  concat('%', #{village},'%')
+            </if>
+            <if test="dispOrder != null">
+                and disp_order = #{dispOrder}
+            </if>
+            <if test="isDelete != null">
+                and is_delete = #{isDelete}
+            </if>
+            <if test="isDelete == null">
+                and is_delete = 0
+            </if>
+            <if test="createTime != null">
+                and DATE_FORMAT(create_time ,"%Y-%m-%d")= DATE_FORMAT( #{createTime} ,"%Y-%m-%d")
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByIds" parameterType="arraylist">
+        DELETE  FROM hy_punch_clock_location WHERE id IN
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.changjianghuyu.qixia.web.dao.SysNoticeDao">
+
+    <resultMap type="com.changjianghuyu.qixia.web.entity.SysNotice" id="SysNoticeMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="images" column="images" jdbcType="VARCHAR"/>
+        <result property="beginTime" column="begin_time" jdbcType="TIMESTAMP"/>
+        <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
+        <result property="isTop" column="is_top" jdbcType="INTEGER"/>
+        <result property="timeUser" column="time_user" jdbcType="INTEGER"/>
+        <result property="dispOrder" column="disp_order" jdbcType="INTEGER"/>
+        <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SysNoticeMap">
+        select
+          id, title, content, images, begin_time, end_time, is_top, time_user, disp_order, is_delete, create_time
+        from cjhy.sys_notice
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SysNoticeMap">
+        select
+          id, title, content, images, begin_time, end_time, is_top, time_user, disp_order, is_delete, create_time
+        from cjhy.sys_notice
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="SysNoticeMap">
+        select
+        id, title, content, images, begin_time, end_time, is_top, time_user, disp_order, is_delete, create_time
+        from cjhy.sys_notice
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="title != null and title != ''">
+                and title = #{title}
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="images != null and images != ''">
+                and images = #{images}
+            </if>
+            <if test="beginTime != null">
+                and begin_time = #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and end_time = #{endTime}
+            </if>
+            <if test="isTop != null">
+                and is_top = #{isTop}
+            </if>
+            <if test="timeUser != null">
+                and time_user = #{timeUser}
+            </if>
+            <if test="dispOrder != null">
+                and disp_order = #{dispOrder}
+            </if>
+            <if test="isDelete != null">
+                and is_delete = #{isDelete}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into cjhy.sys_notice(title, content, images, begin_time, end_time, is_top, time_user, disp_order, is_delete, create_time)
+        values (#{title}, #{content}, #{images}, #{beginTime}, #{endTime}, #{isTop}, #{timeUser}, #{dispOrder}, #{isDelete}, #{createTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into cjhy.sys_notice(title, content, images, begin_time, end_time, is_top, time_user, disp_order,
+        is_delete, create_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.title}, #{entity.content}, #{entity.images}, #{entity.beginTime}, #{entity.endTime},
+            #{entity.isTop}, #{entity.timeUser}, #{entity.dispOrder}, #{entity.isDelete}, #{entity.createTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into cjhy.sys_notice(title, content, images, begin_time, end_time, is_top, time_user, disp_order,
+        is_delete, create_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.title}, #{entity.content}, #{entity.images}, #{entity.beginTime}, #{entity.endTime},
+            #{entity.isTop}, #{entity.timeUser}, #{entity.dispOrder}, #{entity.isDelete}, #{entity.createTime})
+        </foreach>
+        on duplicate key update
+        title = values(title) , content = values(content) , images = values(images) , begin_time = values(begin_time) ,
+        end_time = values(end_time) , is_top = values(is_top) , time_user = values(time_user) , disp_order =
+        values(disp_order) , is_delete = values(is_delete) , create_time = values(create_time)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update cjhy.sys_notice
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="images != null and images != ''">
+                images = #{images},
+            </if>
+            <if test="beginTime != null">
+                begin_time = #{beginTime},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <if test="isTop != null">
+                is_top = #{isTop},
+            </if>
+            <if test="timeUser != null">
+                time_user = #{timeUser},
+            </if>
+            <if test="dispOrder != null">
+                disp_order = #{dispOrder},
+            </if>
+            <if test="isDelete != null">
+                is_delete = #{isDelete},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from cjhy.sys_notice where id = #{id}
+    </delete>
+
+</mapper>

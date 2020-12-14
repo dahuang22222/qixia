@@ -1,0 +1,99 @@
+#spring:
+#  # jackson
+#  jackson:
+#    date-format: yyyy-MM-dd HH:mm:ss
+#    time-zone: GMT+8
+server:
+  port: 8010
+  tomcat:
+    uri-encoding: UTF-8
+
+
+
+#数据源配置
+spring:
+  profiles:
+    active: dev
+  application:
+    name: 'leidaex-wallet'
+  datasource:
+    url: 'jdbc:mysql://175.24.42.155:3306/cjhy?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8'
+#    url: 'jdbc:mysql://localhost:3306/cjhy?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8'
+    username: 'root'
+    password: 'root123..'
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    platform: mysql
+    druid:
+      #用于采集web-jdbc关联监控的数据
+      web-stat-filter:
+        #添加过滤规则
+        url-pattern: '/*'
+        #排除一些不必要的url
+        exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*'
+        enabled: true
+        #配置profileEnable能够监控单个url调用的sql列表
+        profile-enable: true
+        #session统计功能
+        session-stat-enable: true
+        #session-stat-max-count: 2
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/index.html
+        #是否可以重置统计页面
+        reset-enable: true
+        #控制台管理用户
+        login-username: root
+        login-password: 123456
+      aop-patterns: com.changjianghuyu.qixia.web.service.*
+      #最大连接池数量,  推荐的公式：((core_count * 2) + effective_spindle_count)
+      max-active: 200
+      #最小连接池数量
+      min-idle: 10
+      initial-size: 10
+      max-wait: 60000
+      #销毁线程中如果检测到当前连接的最后活跃时间和当前时间的差值大于minEvictableIdleTimeMillis，则关闭当前连接。(毫秒) 当前值: 30分钟
+      minEvictableIdleTimeMillis: 1800000
+      #用来检测连接是否有效的sql，要求是一个查询语句。如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会其作用
+      validationQuery: select 'x' from dual
+      #配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 600000
+      #建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于 timeBetweenEvictionRunsMillis，
+      #执行validationQuery检测连接是否有效。
+      testWhileIdle: true
+      #申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
+      testOnBorrow: false
+      #归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能
+      testOnReturn: false
+      #是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql下建议关闭。
+      poolPreparedStatements: false
+      #要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。
+      maxOpenPreparedStatements: 0
+      connection-properties: "config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAI0/5xoPD11/XeqtJef25bnsMwxfxbRC6x+j4rInDKYLzajTu5wkd/5+fl5bMAfhB37n4hoAvqQpz3mFSkOc9ZMCAwEAAQ=="
+      filters: stat,wall,log4j,config
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      file-size-threshold: 0
+      max-request-size: 500MB
+  resources:
+    static-locations: classpath:/static,classpath:/public,classpath:/resources,classpath:/META-INF/resource
+mybatis:
+    mapper-locations: classpath*:/mapper/*.xml
+    check-config-location: true
+    executor-type: simple
+
+#上传图片的地址
+MultipartFile:
+  #图片存放地址
+#  imagePath: D:/qixia/src/main/resources/static/
+  imagePath: /www/wwwroot/qs.akaba.cn/image/
+#  imagePath: E:/项目/image/
+  #图片访问路径
+  imageRequestPath: /image/
+logging:
+  level:
+    org.springframework.web: DEBUG        #Spring框架中的日志级别
+    com.qixia.changjianghuyu: DEBUG
+    com.changjianghuyu.qixia.web.dao: DEBUG   #sql日志

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.changjianghuyu.qixia.web.dao.SysAreaDao">
+
+    <resultMap type="com.changjianghuyu.qixia.web.entity.SysArea" id="SysAreaMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="parentId" column="parent_id" jdbcType="VARCHAR"/>
+        <result property="areaCode" column="area_code" jdbcType="VARCHAR"/>
+        <result property="areaName" column="area_name" jdbcType="VARCHAR"/>
+        <result property="dispOrder" column="disp_order" jdbcType="INTEGER"/>
+        <result property="level" column="level" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SysAreaMap">
+        select
+          id, parent_id, area_code, area_name, disp_order, level, create_time, is_delete
+        from cjhy.sys_area
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SysAreaMap">
+        select
+          id, parent_id, area_code, area_name, disp_order, level, create_time, is_delete
+        from cjhy.sys_area
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="SysAreaMap">
+        select
+        id, parent_id, area_code, area_name, disp_order, level, create_time, is_delete
+        from cjhy.sys_area
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="parentId != null and parentId != ''">
+                and parent_id = #{parentId}
+            </if>
+            <if test="areaCode != null and areaCode != ''">
+                and area_code = #{areaCode}
+            </if>
+            <if test="areaName != null and areaName != ''">
+                and area_name = #{areaName}
+            </if>
+            <if test="dispOrder != null">
+                and disp_order = #{dispOrder}
+            </if>
+            <if test="level != null">
+                and level = #{level}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="isDelete != null">
+                and is_delete = #{isDelete}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into cjhy.sys_area(parent_id, area_code, area_name, disp_order, level, create_time, is_delete)
+        values (#{parentId}, #{areaCode}, #{areaName}, #{dispOrder}, #{level}, #{createTime}, #{isDelete})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into cjhy.sys_area(parent_id, area_code, area_name, disp_order, level, create_time, is_delete)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.parentId}, #{entity.areaCode}, #{entity.areaName}, #{entity.dispOrder}, #{entity.level},
+            #{entity.createTime}, #{entity.isDelete})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into cjhy.sys_area(parent_id, area_code, area_name, disp_order, level, create_time, is_delete)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.parentId}, #{entity.areaCode}, #{entity.areaName}, #{entity.dispOrder}, #{entity.level},
+            #{entity.createTime}, #{entity.isDelete})
+        </foreach>
+        on duplicate key update
+        parent_id = values(parent_id) , area_code = values(area_code) , area_name = values(area_name) , disp_order =
+        values(disp_order) , level = values(level) , create_time = values(create_time) , is_delete = values(is_delete)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update cjhy.sys_area
+        <set>
+            <if test="parentId != null and parentId != ''">
+                parent_id = #{parentId},
+            </if>
+            <if test="areaCode != null and areaCode != ''">
+                area_code = #{areaCode},
+            </if>
+            <if test="areaName != null and areaName != ''">
+                area_name = #{areaName},
+            </if>
+            <if test="dispOrder != null">
+                disp_order = #{dispOrder},
+            </if>
+            <if test="level != null">
+                level = #{level},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="isDelete != null">
+                is_delete = #{isDelete},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from cjhy.sys_area where id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.changjianghuyu.qixia.web.dao.HyUserPunchClockDao">
+
+    <resultMap type="com.changjianghuyu.qixia.web.entity.HyUserPunchClock" id="HyUserPunchClockMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="clockLongitude" column="clock_longitude" jdbcType="OTHER"/>
+        <result property="clockLatitude" column="clock_latitude" jdbcType="OTHER"/>
+        <result property="beginTime" column="begin_time" jdbcType="OTHER"/>
+        <result property="endTime" column="end_time" jdbcType="OTHER"/>
+        <result property="clockStatus" column="clock_status" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="streetId" column="street_id" jdbcType="INTEGER"/>
+        <result property="villageId" column="village_id" jdbcType="INTEGER"/>
+        <result property="punchClockId" column="punch_clock_id" jdbcType="INTEGER"/>
+        <result property="punchClockLocationId" column="punch_clock_location_id" jdbcType="INTEGER"/>
+        <result property="punchClockTimeId" column="punch_clock_time_id" jdbcType="INTEGER"/>
+        <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="HyUserPunchClockMap">
+        select
+          id, clock_longitude, clock_latitude, begin_time, end_time, clock_status, user_id, street_id, village_id, punch_clock_id, punch_clock_location_id, punch_clock_time_id, is_delete, create_time
+        from cjhy.hy_user_punch_clock
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="HyUserPunchClockMap">
+        select
+          id, clock_longitude, clock_latitude, begin_time, end_time, clock_status, user_id, street_id, village_id, punch_clock_id, punch_clock_location_id, punch_clock_time_id, is_delete, create_time
+        from cjhy.hy_user_punch_clock
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="HyUserPunchClockMap">
+        select
+        id, clock_longitude, clock_latitude, begin_time, end_time, clock_status, user_id, street_id, village_id,
+        punch_clock_id, punch_clock_location_id, punch_clock_time_id, is_delete, create_time
+        from cjhy.hy_user_punch_clock
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="clockLongitude != null">
+                and clock_longitude = #{clockLongitude}
+            </if>
+            <if test="clockLatitude != null">
+                and clock_latitude = #{clockLatitude}
+            </if>
+            <if test="beginTime != null">
+                and begin_time = #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and end_time = #{endTime}
+            </if>
+            <if test="clockStatus != null">
+                and clock_status = #{clockStatus}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="streetId != null">
+                and street_id = #{streetId}
+            </if>
+            <if test="villageId != null">
+                and village_id = #{villageId}
+            </if>
+            <if test="punchClockId != null">
+                and punch_clock_id = #{punchClockId}
+            </if>
+            <if test="punchClockLocationId != null">
+                and punch_clock_location_id = #{punchClockLocationId}
+            </if>
+            <if test="punchClockTimeId != null">
+                and punch_clock_time_id = #{punchClockTimeId}
+            </if>
+            <if test="isDelete != null">
+                and is_delete = #{isDelete}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into cjhy.hy_user_punch_clock(clock_longitude, clock_latitude, begin_time, end_time, clock_status, user_id, street_id, village_id, punch_clock_id, punch_clock_location_id, punch_clock_time_id, is_delete, create_time)
+        values (#{clockLongitude}, #{clockLatitude}, #{beginTime}, #{endTime}, #{clockStatus}, #{userId}, #{streetId}, #{villageId}, #{punchClockId}, #{punchClockLocationId}, #{punchClockTimeId}, #{isDelete}, #{createTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into cjhy.hy_user_punch_clock(clock_longitude, clock_latitude, begin_time, end_time, clock_status,
+        user_id, street_id, village_id, punch_clock_id, punch_clock_location_id, punch_clock_time_id, is_delete,
+        create_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.clockLongitude}, #{entity.clockLatitude}, #{entity.beginTime}, #{entity.endTime},
+            #{entity.clockStatus}, #{entity.userId}, #{entity.streetId}, #{entity.villageId}, #{entity.punchClockId},
+            #{entity.punchClockLocationId}, #{entity.punchClockTimeId}, #{entity.isDelete}, #{entity.createTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into cjhy.hy_user_punch_clock(clock_longitude, clock_latitude, begin_time, end_time, clock_status,
+        user_id, street_id, village_id, punch_clock_id, punch_clock_location_id, punch_clock_time_id, is_delete,
+        create_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.clockLongitude}, #{entity.clockLatitude}, #{entity.beginTime}, #{entity.endTime},
+            #{entity.clockStatus}, #{entity.userId}, #{entity.streetId}, #{entity.villageId}, #{entity.punchClockId},
+            #{entity.punchClockLocationId}, #{entity.punchClockTimeId}, #{entity.isDelete}, #{entity.createTime})
+        </foreach>
+        on duplicate key update
+        clock_longitude = values(clock_longitude) , clock_latitude = values(clock_latitude) , begin_time =
+        values(begin_time) , end_time = values(end_time) , clock_status = values(clock_status) , user_id =
+        values(user_id) , street_id = values(street_id) , village_id = values(village_id) , punch_clock_id =
+        values(punch_clock_id) , punch_clock_location_id = values(punch_clock_location_id) , punch_clock_time_id =
+        values(punch_clock_time_id) , is_delete = values(is_delete) , create_time = values(create_time)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update cjhy.hy_user_punch_clock
+        <set>
+            <if test="clockLongitude != null">
+                clock_longitude = #{clockLongitude},
+            </if>
+            <if test="clockLatitude != null">
+                clock_latitude = #{clockLatitude},
+            </if>
+            <if test="beginTime != null">
+                begin_time = #{beginTime},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+            <if test="clockStatus != null">
+                clock_status = #{clockStatus},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="streetId != null">
+                street_id = #{streetId},
+            </if>
+            <if test="villageId != null">
+                village_id = #{villageId},
+            </if>
+            <if test="punchClockId != null">
+                punch_clock_id = #{punchClockId},
+            </if>
+            <if test="punchClockLocationId != null">
+                punch_clock_location_id = #{punchClockLocationId},
+            </if>
+            <if test="punchClockTimeId != null">
+                punch_clock_time_id = #{punchClockTimeId},
+            </if>
+            <if test="isDelete != null">
+                is_delete = #{isDelete},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from cjhy.hy_user_punch_clock where id = #{id}
+    </delete>
+
+</mapper>
