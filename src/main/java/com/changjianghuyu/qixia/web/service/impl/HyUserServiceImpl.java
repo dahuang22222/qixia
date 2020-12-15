@@ -16,10 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 用户信息表(HyUser)表服务实现类
@@ -151,6 +148,12 @@ public class HyUserServiceImpl implements HyUserService {
             String pwd = MD5Utils.encodedMD5(hyUser.getPassword());
             hyUser.setPassword(pwd);
         }
+        if(hyUser.getUserType() != null && hyUser.getUserType() == 1) {
+            hyUser.setVillageId(null);
+            hyUser.setVillage(null);
+            hyUser.setStreetId(null);
+            hyUser.setStreet(null);
+        }
         this.hyUserDao.update(hyUser);
         return this.queryById(hyUser.getId());
     }
@@ -212,5 +215,33 @@ public class HyUserServiceImpl implements HyUserService {
             idList.add(Long.valueOf(id));
         }
         return hyUserDaoSelf.deleteByIds(idList);
+    }
+
+    @Override
+    public Map<String, Object> updateUserPassword(Map<String,String> map) {
+        Map<String, Object> result = new HashMap<>();
+        HyUser hyUser = new HyUser();
+        hyUser.setId(Long.valueOf(map.get("id")));
+        if(StringUtils.isNotBlank(map.get("oldPassword"))) {
+            HyUser tempUser = hyUserDao.queryById(Long.valueOf(map.get("id")));
+            String oldPassword = MD5Utils.encodedMD5(map.get("oldPassword"));
+            if (!oldPassword.equals(tempUser.getPassword())){
+                result.put("message","旧密码错误！");
+                return result;
+            }
+        }else{
+            result.put("message","旧密码不存在！");
+        }
+        String newPassword = map.get("newPassword");
+        //密码加密
+        if(StringUtils.isNotBlank(map.get("newPassword"))) {
+            String password = MD5Utils.encodedMD5(newPassword);
+            hyUser.setPassword(password);
+        }
+
+        this.hyUserDao.update(hyUser);
+        result.put("user",this.queryById(hyUser.getId()));
+        result.put("message","更新成功！");
+        return result;
     }
 }

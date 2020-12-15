@@ -69,6 +69,9 @@ public class LoginServiceImpl implements LoginService {
                 result.put("user",userExpand);
                 result.put("message","登陆成功！");
                 return result;
+                } else{
+                    result.put("message","密码错误！");
+                    return result;
                 }
             }else{
                 result.put("message","用户不存在！");
@@ -81,8 +84,6 @@ public class LoginServiceImpl implements LoginService {
             //验证手机号和激活状态
             HyUser hyUser = new HyUser();
             hyUser.setPhone(map.get("phone"));
-            hyUser.setStreetId(Long.valueOf(map.get("streetId")));
-            hyUser.setVillageId(Long.valueOf(map.get("villageId")));
             List<HyUser> userList = hyUserDao.queryAll(hyUser);
             //手机号
             if (!CollectionUtils.isEmpty(userList)) {
@@ -91,7 +92,14 @@ public class LoginServiceImpl implements LoginService {
                 //验证街道和村是否满足要求
                 if(StringUtils.isNotBlank(map.get("streetId"))){
                     if(Long.valueOf(map.get("streetId")) != user.getStreetId()) {
-                        return null;
+                        result.put("message","所选街道和手机号不匹配！");
+                        return result;
+                    }
+                }
+                if(StringUtils.isNotBlank(map.get("villageId"))){
+                    if(Long.valueOf(map.get("villageId")) != user.getVillageId()) {
+                        result.put("message","所选村和手机号不匹配！");
+                        return result;
                     }
                 }
 //                String userPassWord = userList.get(0).getPassword();

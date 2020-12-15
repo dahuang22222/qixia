@@ -19,7 +19,7 @@ import java.util.Map;
  * @since 2020-11-12 18:31:23
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("  ")
 public class HyUserController {
     /**
      * 服务对象
@@ -29,33 +29,35 @@ public class HyUserController {
 
 
     /**
-     *  2.1新增单个用户
+     * 2.1新增单个用户
+     *
      * @param hyUser
      * @return
      */
     @PostMapping("/insertUser")
     @ResponseBody
-    public MsgHander insertUser(@RequestBody HyUser hyUser){
+    public MsgHander insertUser(@RequestBody HyUser hyUser) {
         HyUser user = hyUserService.insert(hyUser);
-        if(ObjectUtils.isEmpty(user)){
-            return  new MsgHander(HanderCode.CONTROLLER_CODE_ERROR,"插入失败！",null);
-        }else{
-            return  new MsgHander(user);
+        if (ObjectUtils.isEmpty(user)) {
+            return new MsgHander(HanderCode.CONTROLLER_CODE_ERROR, "插入失败！", null);
+        } else {
+            return new MsgHander(user);
         }
     }
 
     /**
-     *  2.2批量新增用户
+     * 2.2批量新增用户
+     *
      * @param paramUser
      * @return
      */
     @PostMapping("/insertUserList")
-    public MsgHander insertUserList(@RequestBody List<HyUser> paramUser){
+    public MsgHander insertUserList(@RequestBody List<HyUser> paramUser) {
         List<HyUser> userList = hyUserService.insertUserList(paramUser);
-        if(ObjectUtils.isEmpty(userList)){
-            return  new MsgHander(HanderCode.CONTROLLER_CODE_ERROR,"插入失败！",null);
-        }else{
-            return  new MsgHander(userList);
+        if (ObjectUtils.isEmpty(userList)) {
+            return new MsgHander(HanderCode.CONTROLLER_CODE_ERROR, "插入失败！", null);
+        } else {
+            return new MsgHander(userList);
         }
     }
 
@@ -77,22 +79,24 @@ public class HyUserController {
      * @return 多条数据
      */
     @GetMapping("/getUserList")
-    public MsgHander getUserList(@RequestParam Map<String,String> map) {
+    public MsgHander getUserList(@RequestParam Map<String, String> map) {
         return new MsgHander(this.hyUserService.getUserList(map));
     }
 
     /**
      * 2.5根据用户id更新用户信息
+     *
      * @param user
      * @return
      */
     @PostMapping("/updateUserById")
-    public MsgHander updateUserById(@RequestBody HyUser user){
+    public MsgHander updateUserById(@RequestBody HyUser user) {
         return new MsgHander(this.hyUserService.update(user));
     }
 
     /**
-     *  2.6
+     * 2.6
+     *
      * @param user
      * @return
      */
@@ -102,10 +106,10 @@ public class HyUserController {
         MsgHander msg = new MsgHander();
         boolean deleteResult = hyUserService.deleteById(id);
         msg.setContext(deleteResult);
-        if(deleteResult){
+        if (deleteResult) {
             msg.setMessage("删除成功");
             msg.setStatus(HanderCode.CONTROLLER_CODE_SUCCESS);
-        }else {
+        } else {
             msg.setMessage("系统异常");
             msg.setStatus(HanderCode.CONTROLLER_CODE_ERROR);
         }
@@ -114,13 +118,33 @@ public class HyUserController {
 
     /**
      * 2.7批量删除
+     *
      * @param map
      * @return
      */
     @PostMapping("/deleteByIds")
-    public MsgHander deleteByIds(@RequestBody Map<String,String> map) {
+    public MsgHander deleteByIds(@RequestBody Map<String, String> map) {
         String Ids = map.get("ids");
         return new MsgHander(this.hyUserService.deleteByIds(Ids));
     }
 
+    /**
+     * 2.8根据旧密码更新密码
+     *
+     * @param map
+     * @return
+     */
+    @PostMapping("/updateUserPassword")
+    public MsgHander updateUserPassword(@RequestBody Map<String, String> map) {
+        MsgHander msg = new MsgHander();
+        msg.setStatus(HanderCode.CONTROLLER_CODE_SUCCESS);
+        Map<String, Object> result = hyUserService.updateUserPassword(map);
+        msg.setMessage(String.valueOf(result.get("message")));
+        if (ObjectUtils.isEmpty(result.get("user"))) {
+            msg.setStatus(HanderCode.CONTROLLER_CODE_ERROR);
+        } else {
+            msg.setContext(result.get("user"));
+        }
+        return msg;
+    }
 }

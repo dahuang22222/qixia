@@ -9,14 +9,12 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.crypto.hash.Hash;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 地区表(SysArea)表服务实现类
@@ -62,20 +60,33 @@ public class SysAreaServiceImpl implements SysAreaService {
      * @return 实例对象
      */
     @Override
-    public SysArea insert(SysArea sysArea) {
+    public Map<String, Object> insert(SysArea sysArea) {
+        HashMap<String, Object> result = new HashMap<>();
         if(StringUtils.isNotBlank(sysArea.getAreaCode())){
             SysArea tempSysArea = new SysArea();
             tempSysArea.setAreaCode(sysArea.getAreaCode());
             List<SysArea> sysAreaList = sysAreaDao.queryAll(tempSysArea);
             if(sysAreaList.size() != 0){
-                return null;
+                result.put("message","地区编码重复！");
+                return result;
+            }
+        }
+        if(StringUtils.isNotBlank(sysArea.getAreaName())){
+            SysArea tempSysArea = new SysArea();
+            tempSysArea.setAreaName(sysArea.getAreaName());
+            List<SysArea> sysAreaList = sysAreaDao.queryAll(tempSysArea);
+            if(sysAreaList.size() != 0){
+                result.put("message","地区名称重复！");
+                return result;
             }
         }
         sysArea.setIsDelete(0);
         sysArea.setCreateTime(new Date());
         sysArea.setDispOrder(5);
         this.sysAreaDao.insert(sysArea);
-        return sysArea;
+        result.put("sysArea",sysArea);
+        result.put("message","插入成功！");
+        return result;
     }
 
     /**
@@ -85,9 +96,22 @@ public class SysAreaServiceImpl implements SysAreaService {
      * @return 实例对象
      */
     @Override
-    public SysArea update(SysArea sysArea) {
+    public Map<String, Object> update(SysArea sysArea) {
+        Map<String, Object> result = new HashMap<>();
+        SysArea tempSysArea = sysAreaDao.queryById(sysArea.getId());
+        if(tempSysArea.getLevel() != null && tempSysArea.getLevel() == 8L  && tempSysArea.getLevel() != sysArea.getLevel()){
+            SysArea tempSysArea2 =  new SysArea();
+            tempSysArea2.setParentId(String.valueOf(sysArea.getId()));
+            List<SysArea> areaList = sysAreaDao.queryAll(tempSysArea2);
+            if(areaList.size() > 0){
+                result.put("message","请先清空子目录");
+                return result;
+            }
+        }
         this.sysAreaDao.update(sysArea);
-        return this.queryById(sysArea.getId());
+        result.put("sysArea",this.queryById(sysArea.getId()));
+        result.put("message","更新成功");
+        return result;
     }
 
     /**
@@ -97,8 +121,22 @@ public class SysAreaServiceImpl implements SysAreaService {
      * @return 是否成功
      */
     @Override
-    public boolean deleteById(Long id) {
-        return this.sysAreaDao.deleteById(id) > 0;
+    public  Map<String, Object> deleteById(Long id) {
+        Map<String, Object> result = new HashMap<>();
+        SysArea tempSysArea = sysAreaDao.queryById(id);
+        if(null != tempSysArea.getLevel() && tempSysArea.getLevel() == 8L){
+            SysArea tempSysArea2 =  new SysArea();
+            tempSysArea2.setParentId(String.valueOf(id));
+            List<SysArea> areaList = sysAreaDao.queryAll(tempSysArea2);
+            if(areaList.size() > 0){
+                result.put("status","-1");
+                result.put("message","请先清空子目录");
+                return result;
+            }
+        }
+        result.put("status",this.sysAreaDao.deleteById(id));
+        result.put("message","更新成功！");
+        return result;
     }
 
     /**

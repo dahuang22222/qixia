@@ -4,6 +4,7 @@ import com.changjianghuyu.qixia.web.dao.HyInformationFeedbackDao;
 import com.changjianghuyu.qixia.web.dao.HyInformationFeedbackDaoSelf;
 import com.changjianghuyu.qixia.web.dao.HyUserDao;
 import com.changjianghuyu.qixia.web.entity.HyInformationFeedback;
+import com.changjianghuyu.qixia.web.entity.HyInformationFeedbackExpand;
 import com.changjianghuyu.qixia.web.entity.HyUser;
 import com.changjianghuyu.qixia.web.service.HyInformationFeedbackService;
 import com.github.pagehelper.PageHelper;
@@ -125,7 +126,7 @@ public class HyInformationFeedbackServiceImpl implements HyInformationFeedbackSe
         if(StringUtils.isNotBlank(map.get("pageSize"))){
             pageSize = Integer.valueOf(map.get("pageSize"));//页面数
         }
-        HyInformationFeedback hyInformationFeedback = new HyInformationFeedback();
+        HyInformationFeedbackExpand hyInformationFeedback = new HyInformationFeedbackExpand();
         if(StringUtils.isNotBlank(map.get("content"))){
             hyInformationFeedback.setContent(map.get("content"));
         }
@@ -137,6 +138,12 @@ public class HyInformationFeedbackServiceImpl implements HyInformationFeedbackSe
         }
         if(StringUtils.isNotBlank(map.get("provideTime"))){
             hyInformationFeedback.setProvideTime(sdf.parse(map.get("provideTime")));
+        }
+        if(StringUtils.isNotBlank(map.get("beginTime"))){
+            hyInformationFeedback.setBeginTime(sdf.parse(map.get("beginTime")));
+        }
+        if(StringUtils.isNotBlank(map.get("endTime"))){
+            hyInformationFeedback.setEndTime(sdf.parse(map.get("endTime")));
         }
         if(StringUtils.isNotBlank(map.get("content"))){
             hyInformationFeedback.setContent(map.get("content"));

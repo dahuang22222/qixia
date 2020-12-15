@@ -78,4 +78,11 @@ public interface HyUserService {
      */
     int deleteByIds(String id);
 
+    /**
+     * 根据旧密码更新新的密码
+     * @param map
+     * @return
+     */
+    Map<String, Object> updateUserPassword(Map<String,String> map);
+
 }

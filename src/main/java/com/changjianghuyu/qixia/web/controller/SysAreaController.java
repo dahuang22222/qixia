@@ -4,6 +4,7 @@ import com.changjianghuyu.qixia.web.common.msg.HanderCode;
 import com.changjianghuyu.qixia.web.common.msg.MsgHander;
 import com.changjianghuyu.qixia.web.entity.SysArea;
 import com.changjianghuyu.qixia.web.service.SysAreaService;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -56,11 +57,12 @@ public class SysAreaController {
         MsgHander msg = new MsgHander();
         msg.setMessage("插入成功");
         msg.setStatus(HanderCode.CONTROLLER_CODE_SUCCESS);
-        SysArea result = sysAreaService.insert(sysArea);
-        if(null != result){
-            msg.setContext(result);
-        }else{
+        Map<String, Object> result = sysAreaService.insert(sysArea);
+        if(ObjectUtils.isEmpty(result.get("sysArea"))){
             msg.setStatus(HanderCode.CONTROLLER_CODE_ERROR);
+            msg.setMessage(String.valueOf(result.get("message")));
+        }else{
+            msg.setContext(result);
         }
         return  msg;
     }
@@ -73,11 +75,12 @@ public class SysAreaController {
     @PostMapping("/updateSysArea")
     public MsgHander updateSysArea(@RequestBody SysArea sysArea) {
         MsgHander msg = new MsgHander();
-        msg.setMessage("更新成功");
+
         msg.setStatus(HanderCode.CONTROLLER_CODE_SUCCESS);
-        SysArea result =sysAreaService.update(sysArea);
-        if(null != result){
-            msg.setContext(result);
+        Map<String, Object> result = sysAreaService.update(sysArea);
+        msg.setMessage(String.valueOf(result.get("message")));
+        if(null != result.get("sysArea")){
+            msg.setContext(result.get("sysArea"));
         }else{
             msg.setStatus(HanderCode.CONTROLLER_CODE_ERROR);
         }
@@ -92,7 +95,18 @@ public class SysAreaController {
     @PostMapping("/deleteById")
     public MsgHander deleteById(@RequestBody SysArea sysArea) {
         Long id = sysArea.getId();
-        return new MsgHander(sysAreaService.deleteById(id));
+
+        MsgHander msg = new MsgHander();
+        msg.setStatus(HanderCode.CONTROLLER_CODE_SUCCESS);
+        Map<String, Object> result = sysAreaService.deleteById(id);
+        msg.setMessage(String.valueOf(result.get("message")));
+        if("-1" == result.get("status")){
+            msg.setStatus(HanderCode.CONTROLLER_CODE_ERROR);
+
+        }else{
+            msg.setContext(result.get("status"));
+        }
+        return  msg;
     }
 
 

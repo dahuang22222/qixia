@@ -1,6 +1,7 @@
 package com.changjianghuyu.qixia.web.dao;
 
 import com.changjianghuyu.qixia.web.entity.HyInformationFeedback;
+import com.changjianghuyu.qixia.web.entity.HyInformationFeedbackExpand;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface HyInformationFeedbackDaoSelf {
      * @param hyInformationFeedback 实例对象
      * @return 对象列表
      */
-    List<HyInformationFeedback> queryAll(HyInformationFeedback hyInformationFeedback);
+    List<HyInformationFeedback> queryAll(HyInformationFeedbackExpand hyInformationFeedback);
 
     /**
      * 批量删除

@@ -37,7 +37,7 @@ public interface SysAreaService {
      * @param sysArea 实例对象
      * @return 实例对象
      */
-    SysArea insert(SysArea sysArea);
+    Map<String, Object> insert(SysArea sysArea);
 
     /**
      * 修改数据
@@ -45,7 +45,7 @@ public interface SysAreaService {
      * @param sysArea 实例对象
      * @return 实例对象
      */
-    SysArea update(SysArea sysArea);
+    Map<String, Object>  update(SysArea sysArea);
 
     /**
      * 通过主键删除数据
@@ -53,7 +53,7 @@ public interface SysAreaService {
      * @param id 主键
      * @return 是否成功
      */
-    boolean deleteById(Long id);
+    Map<String, Object> deleteById(Long id);
 
     /**
      * 分页获取区域划分
