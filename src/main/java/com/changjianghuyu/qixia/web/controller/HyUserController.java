@@ -19,7 +19,7 @@ import java.util.Map;
  * @since 2020-11-12 18:31:23
  */
 @RestController
-@RequestMapping("  ")
+@RequestMapping("/user")
 public class HyUserController {
     /**
      * 服务对象

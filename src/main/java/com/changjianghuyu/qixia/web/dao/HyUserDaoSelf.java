@@ -18,4 +18,12 @@ public interface HyUserDaoSelf {
      * @return
      */
     int deleteByIds(List<Long> idList);
+
+    /**
+     * 修改数据
+     *
+     * @param hyUser 实例对象
+     * @return 影响行数
+     */
+    int update(HyUser hyUser);
 }

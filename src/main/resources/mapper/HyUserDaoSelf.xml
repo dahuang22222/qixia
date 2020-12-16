@@ -87,4 +87,69 @@
             #{id}
         </foreach>
     </delete>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update cjhy.hy_user
+        <set>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName},
+            </if>
+            <if test="nickname != null and nickname != ''">
+                nickname = #{nickname},
+            </if>
+            <if test="userType != null">
+                user_type = #{userType},
+                <if test="userType != 1">
+                    <if test="street != null and street != ''">
+                        street = #{street},
+                    </if>
+                    <if test="village != null and village != ''">
+                        village = #{village},
+                    </if>
+                    <if test="streetId != null">
+                        street_id = #{streetId},
+                    </if>
+                    <if test="villageId != null">
+                        village_id = #{villageId},
+                    </if>
+                </if>
+                <if test="userType == 1">
+                        street = null,
+                        village = null,
+                        street_id = null,
+                        village_id = null,
+                </if>
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="weichatNumber != null and weichatNumber != ''">
+                weichat_number = #{weichatNumber},
+            </if>
+            <if test="qqNumber != null and qqNumber != ''">
+                qq_number = #{qqNumber},
+            </if>
+            <if test="profession != null and profession != ''">
+                profession = #{profession},
+            </if>
+            <if test="image != null and image != ''">
+                image = #{image},
+            </if>
+            <if test="age != null">
+                age = #{age},
+            </if>
+
+            <if test="isDelete != null">
+                is_delete = #{isDelete},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

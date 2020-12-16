@@ -167,6 +167,32 @@ public class HyPunchClockServiceImpl implements HyPunchClockService {
                     }
                 }
             }
+        }else{
+            //具体的打卡点和打卡时间的个人打卡统计表对象
+            HyUserPunchClock tempUserPunchClock = new HyUserPunchClock();
+            tempUserPunchClock.setUserId(hyPunchClock.getUserId());
+            tempUserPunchClock.setStreetId(hyPunchClock.getStreetId());
+            tempUserPunchClock.setVillageId(hyPunchClock.getVillageId());
+            tempUserPunchClock.setIsDelete(0);
+            tempUserPunchClock.setPunchClockLocationId(hyPunchClock.getPunchClockLocationId());
+            tempUserPunchClock.setPunchClockTimeId(hyPunchClock.getPunchClockTimeId());
+            List<HyUserPunchClock> hyUserPunchClockList = hyUserPunchClockDao.queryAll(tempUserPunchClock);
+            totleNum = hyUserPunchClocks.size();
+            if(hyPunchClock.getPunchClockTimeId() != null){
+                HyUserPunchClock hyUserPunchClock = hyUserPunchClockList.get(0);
+                if(hyUserPunchClock.getClockStatus() == 0){
+                    //时间和地点一致
+                    if(hyPunchClock.getClockStatus() == 1){
+                        //正常的打卡 更新操作
+                        hyUserPunchClock.setClockStatus(1);
+
+                    }else {
+                        hyUserPunchClock.setClockStatus(2);
+                    }
+                }
+                hyUserPunchClock.setPunchClockId(hyPunchClock.getId());
+                hyUserPunchClockDao.update(hyUserPunchClock);
+            }
         }
 
         //村统计表对象

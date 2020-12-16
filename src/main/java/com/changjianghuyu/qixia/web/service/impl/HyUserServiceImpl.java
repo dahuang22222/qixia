@@ -7,6 +7,7 @@ import com.changjianghuyu.qixia.web.dao.SysAreaDao;
 import com.changjianghuyu.qixia.web.entity.HyUser;
 import com.changjianghuyu.qixia.web.entity.SysArea;
 import com.changjianghuyu.qixia.web.service.HyUserService;
+import com.changjianghuyu.qixia.web.service.SysAreaService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +35,9 @@ public class HyUserServiceImpl implements HyUserService {
 
     @Resource
     private SysAreaDao sysAreaDao;
+
+    @Resource
+    private SysAreaService sysAreaService;
 
     /**
      * 通过ID查询单条数据
@@ -148,13 +152,15 @@ public class HyUserServiceImpl implements HyUserService {
             String pwd = MD5Utils.encodedMD5(hyUser.getPassword());
             hyUser.setPassword(pwd);
         }
-        if(hyUser.getUserType() != null && hyUser.getUserType() == 1) {
-            hyUser.setVillageId(null);
-            hyUser.setVillage(null);
-            hyUser.setStreetId(null);
-            hyUser.setStreet(null);
+        if(hyUser.getStreetId() != null && hyUser.getStreet() == null ) {
+            SysArea sysArea = sysAreaService.queryById(hyUser.getVillageId());
+            hyUser.setStreet(sysArea.getAreaName());
         }
-        this.hyUserDao.update(hyUser);
+        if(hyUser.getVillageId() != null && hyUser.getVillage() == null ) {
+            SysArea sysArea = sysAreaService.queryById(hyUser.getVillageId());
+            hyUser.setVillage(sysArea.getAreaName());
+        }
+        this.hyUserDaoSelf.update(hyUser);
         return this.queryById(hyUser.getId());
     }
 
