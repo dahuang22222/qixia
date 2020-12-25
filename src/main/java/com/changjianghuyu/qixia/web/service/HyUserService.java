@@ -37,7 +37,7 @@ public interface HyUserService {
      * @param hyUser 实例对象
      * @return 实例对象
      */
-    HyUser insert(HyUser hyUser);
+    Map<String, Object> insert(HyUser hyUser);
 
     /**
      * 新增用户集合
@@ -53,7 +53,7 @@ public interface HyUserService {
      * @param hyUser 实例对象
      * @return 实例对象
      */
-    HyUser update(HyUser hyUser);
+    Map<String, Object> update(HyUser hyUser);
 
     /**
      * 通过主键删除数据

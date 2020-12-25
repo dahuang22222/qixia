@@ -2,14 +2,20 @@ package com.changjianghuyu.qixia.web.service.impl;
 
 import com.changjianghuyu.qixia.web.dao.HyPunchClockTimeDao;
 import com.changjianghuyu.qixia.web.dao.HyPunchClockTimeDaoSelf;
+import com.changjianghuyu.qixia.web.dao.HyUserPunchClockDao;
+import com.changjianghuyu.qixia.web.dao.HyUserPunchClockDaoSelf;
 import com.changjianghuyu.qixia.web.entity.HyPunchClockLocation;
 import com.changjianghuyu.qixia.web.entity.HyPunchClockTime;
+import com.changjianghuyu.qixia.web.entity.HyUserPunchClock;
+import com.changjianghuyu.qixia.web.service.HyPunchClockLocationService;
 import com.changjianghuyu.qixia.web.service.HyPunchClockTimeService;
+import com.changjianghuyu.qixia.web.service.HyUserPunchClockService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -17,6 +23,7 @@ import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +40,15 @@ public class HyPunchClockTimeServiceImpl implements HyPunchClockTimeService {
 
     @Resource
     private HyPunchClockTimeDaoSelf hyPunchClockTimeDaoSelf;
+
+    @Resource
+    private HyUserPunchClockService hyUserPunchClockService;
+
+    @Resource
+    private HyUserPunchClockDaoSelf hyUserPunchClockDaoSelf;
+
+    @Resource
+    private HyPunchClockLocationService hyPunchClockLocationService;
     /**
      * 通过ID查询单条数据
      *
@@ -63,9 +79,35 @@ public class HyPunchClockTimeServiceImpl implements HyPunchClockTimeService {
      * @return 实例对象
      */
     @Override
+    @Transactional
     public HyPunchClockTime insert(HyPunchClockTime hyPunchClockTime) {
+        //新增用户统计打卡时间点
+        HyUserPunchClock hyUserPunchClock = new HyUserPunchClock();
+        hyUserPunchClock.setPunchClockLocationId(hyPunchClockTime.getPunchClockLocationId());
+        List<HyUserPunchClock> list = hyUserPunchClockDaoSelf.queryAllGroupByUser(hyUserPunchClock);
+
         hyPunchClockTime.setIsDelete(0);
         this.hyPunchClockTimeDao.insert(hyPunchClockTime);
+
+        //存储过,则新增这个点用户打卡统计
+        if(list.size()>0){
+            for (HyUserPunchClock tempHyUserPunchClock: list) {
+                HyPunchClockLocation clockLocation = hyPunchClockLocationService.queryById(hyPunchClockTime.getPunchClockLocationId());
+                //个人打卡统计表对象
+                hyUserPunchClock.setBeginTime(hyPunchClockTime.getBeginTime());
+                hyUserPunchClock.setEndTime(hyPunchClockTime.getEndTime());
+                hyUserPunchClock.setClockLongitude(clockLocation.getClockLongitude());
+                hyUserPunchClock.setClockLatitude(clockLocation.getClockLatitude());
+                hyUserPunchClock.setCreateTime(new Date());
+                hyUserPunchClock.setUserId(tempHyUserPunchClock.getUserId());
+                hyUserPunchClock.setStreetId(tempHyUserPunchClock.getStreetId());
+                hyUserPunchClock.setVillageId(tempHyUserPunchClock.getVillageId());
+                hyUserPunchClock.setClockStatus(0);
+                hyUserPunchClock.setIsDelete(0);
+                hyUserPunchClock.setPunchClockTimeId(hyPunchClockTime.getId());
+                hyUserPunchClockService.insert(hyUserPunchClock);
+            }
+        }
         return hyPunchClockTime;
     }
 
@@ -76,8 +118,16 @@ public class HyPunchClockTimeServiceImpl implements HyPunchClockTimeService {
      * @return 实例对象
      */
     @Override
+    @Transactional
     public HyPunchClockTime update(HyPunchClockTime hyPunchClockTime) {
         this.hyPunchClockTimeDao.update(hyPunchClockTime);
+        //修改用户统计打卡时间点
+        HyUserPunchClock hyUserPunchClock = new HyUserPunchClock();
+        hyUserPunchClock.setEndTime(hyPunchClockTime.getEndTime());
+        hyUserPunchClock.setBeginTime(hyPunchClockTime.getBeginTime());
+        hyUserPunchClock.setPunchClockTimeId(hyPunchClockTime.getId());
+
+        hyUserPunchClockService.updateTodayTime(hyUserPunchClock);
         return this.queryById(hyPunchClockTime.getId());
     }
 

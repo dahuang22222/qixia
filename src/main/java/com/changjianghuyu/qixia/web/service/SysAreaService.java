@@ -64,10 +64,10 @@ public interface SysAreaService {
 
     /**
      * 直接查询所有的地区列表
-     * @param sysArea
+     * @param map
      * @return
      */
-    public List<SysArea> getAreaList(SysArea sysArea);
+    public List<SysArea> getAreaList(Map<String,String> map);
 
 
     /**

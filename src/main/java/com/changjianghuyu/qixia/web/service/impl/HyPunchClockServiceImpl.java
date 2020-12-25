@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.crypto.hash.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,7 +84,8 @@ public class HyPunchClockServiceImpl implements HyPunchClockService {
         if(distance1.compareTo(hyPunchClockLocation.getClockR()) == 1){
             hyPunchClock.setClockStatus(2);
             result.put("status",2);
-            result.put("msg","地址错误，请重新打卡！");
+            result.put("msg","请在规定区域内打卡！");
+            return result;
         }else{
             HyPunchClockTime paramHyPunchClockTime = new HyPunchClockTime();
             paramHyPunchClockTime.setPunchClockLocationId(hyPunchClockLocation.getId());
@@ -95,14 +97,18 @@ public class HyPunchClockServiceImpl implements HyPunchClockService {
                     hyPunchClock.setClockStatus(1);
                     hyPunchClock.setPunchClockTimeId(tempHyPunchClockTime1.getId());
                     result.put("status",1);
-                    result.put("msg","打卡正确！");
+                    result.put("msg","打卡成功！");
                     break;
                 }else{
                     hyPunchClock.setClockStatus(3);
                     result.put("status",3);
-                    result.put("msg","时间错误！");
+                    result.put("msg","请在规定时间内打卡！");
                 }
             }
+        }
+        //打卡循环结束时时间不正确则返回给前端
+        if("3".equals(String.valueOf(result.get("status")))){
+            return result;
         }
         hyPunchClock.setIsDelete(0);
         hyPunchClock.setCreateTime(new Date());
@@ -176,7 +182,8 @@ public class HyPunchClockServiceImpl implements HyPunchClockService {
             tempUserPunchClock.setIsDelete(0);
             tempUserPunchClock.setPunchClockLocationId(hyPunchClock.getPunchClockLocationId());
             tempUserPunchClock.setPunchClockTimeId(hyPunchClock.getPunchClockTimeId());
-            List<HyUserPunchClock> hyUserPunchClockList = hyUserPunchClockDao.queryAll(tempUserPunchClock);
+            tempUserPunchClock.setCreateTime(new Date());
+            List<HyUserPunchClock> hyUserPunchClockList = hyUserPunchClockDaoSelf.getTodayList(tempUserPunchClock);
             totleNum = hyUserPunchClocks.size();
             if(hyPunchClock.getPunchClockTimeId() != null){
                 HyUserPunchClock hyUserPunchClock = hyUserPunchClockList.get(0);
@@ -191,6 +198,17 @@ public class HyPunchClockServiceImpl implements HyPunchClockService {
                     }
                 }
                 hyUserPunchClock.setPunchClockId(hyPunchClock.getId());
+                //同一打卡点，打卡时间，当天只可以打卡一次
+                HyUserPunchClock tempHyUserPunchClock = new HyUserPunchClock();
+                tempHyUserPunchClock.setPunchClockTimeId(hyUserPunchClock.getPunchClockTimeId());
+                tempHyUserPunchClock.setPunchClockLocationId(hyUserPunchClock.getPunchClockLocationId());
+                tempHyUserPunchClock.setCreateTime(new Date());
+                tempHyUserPunchClock.setClockStatus(1);
+                List<HyUserPunchClock> todayList = hyUserPunchClockDaoSelf.getTodayList(tempHyUserPunchClock);
+                if(todayList.size()>0){
+                    int a =  5/0;
+                }
+                //更新拥挤信息
                 hyUserPunchClockDao.update(hyUserPunchClock);
             }
         }
@@ -207,14 +225,19 @@ public class HyPunchClockServiceImpl implements HyPunchClockService {
             villagePunchClockDay.setUserId(hyPunchClock.getUserId());
             villagePunchClockDay.setClockStatus(1);
             villagePunchClockDay.setClockDate(LocalDate.now());
-            villagePunchClockDay.setCreateTime(new Date());
+
             villagePunchClockDay.setIsDelete(0);
             villagePunchClockDay.setStreet(hyPunchClockLocation.getStreet());
             villagePunchClockDay.setStreetId(hyPunchClockLocation.getStreetId());
             villagePunchClockDay.setVillage(hyPunchClockLocation.getVillage());
             villagePunchClockDay.setVillageId(hyPunchClockLocation.getVillageId());
-            //村统计
-            villagePunchClockDayDao.insert(villagePunchClockDay);
+            //
+            List<VillagePunchClockDay> list = villagePunchClockDayDao.queryAll(villagePunchClockDay);
+            if (list.size() == 0) {
+                villagePunchClockDay.setCreateTime(new Date());
+                //村统计
+                villagePunchClockDayDao.insert(villagePunchClockDay);
+            }
         }
         return result;
     }
@@ -337,5 +360,14 @@ public class HyPunchClockServiceImpl implements HyPunchClockService {
         hyPunchClock.setClockTime(new Date());
         List<HyPunchClock> hyPunchClockList = hyPunchClockDaoSelf.queryAll(hyPunchClock);
         return hyPunchClockList;
+    }
+
+    public static void main(String[] args) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("status", 3);
+        if("3".equals(String.valueOf(map.get("status")))){
+            System.out.println("状态核对成功");
+        }
+
     }
 }

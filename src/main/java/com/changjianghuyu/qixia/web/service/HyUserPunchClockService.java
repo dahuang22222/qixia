@@ -70,4 +70,11 @@ public interface HyUserPunchClockService {
      * @return
      */
     List<HyUserPunchClock> queryAll(HyUserPunchClock hyUserPunchClock);
+
+    /**
+     * 根据打卡的时间id,修改用户当天统计的打卡时间
+     * @param hyUserPunchClock
+     * @return
+     */
+    int updateTodayTime(HyUserPunchClock hyUserPunchClock);
 }

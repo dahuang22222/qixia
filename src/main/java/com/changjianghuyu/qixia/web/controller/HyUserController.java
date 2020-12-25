@@ -37,12 +37,15 @@ public class HyUserController {
     @PostMapping("/insertUser")
     @ResponseBody
     public MsgHander insertUser(@RequestBody HyUser hyUser) {
-        HyUser user = hyUserService.insert(hyUser);
-        if (ObjectUtils.isEmpty(user)) {
-            return new MsgHander(HanderCode.CONTROLLER_CODE_ERROR, "插入失败！", null);
-        } else {
-            return new MsgHander(user);
+        MsgHander msg = new MsgHander();
+        Map<String, Object> userMap = hyUserService.insert(hyUser);
+        msg.setMessage(String.valueOf(userMap.get("message")));
+        if (!ObjectUtils.isEmpty(userMap.get("user"))) {
+            msg.setContext(userMap.get("user"));
+        }else{
+            msg.setStatus(HanderCode.CONTROLLER_CODE_ERROR);
         }
+        return msg;
     }
 
     /**
@@ -91,7 +94,15 @@ public class HyUserController {
      */
     @PostMapping("/updateUserById")
     public MsgHander updateUserById(@RequestBody HyUser user) {
-        return new MsgHander(this.hyUserService.update(user));
+        MsgHander msg = new MsgHander();
+        Map<String, Object> userMap = this.hyUserService.update(user);
+        msg.setMessage(String.valueOf(userMap.get("message")));
+        if (!ObjectUtils.isEmpty(userMap.get("user"))) {
+            msg.setContext(userMap.get("user"));
+        }else{
+            msg.setStatus(HanderCode.CONTROLLER_CODE_ERROR);
+        }
+        return msg;
     }
 
     /**

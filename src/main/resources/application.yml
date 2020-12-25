@@ -18,7 +18,7 @@ spring:
     name: 'leidaex-wallet'
   datasource:
     url: 'jdbc:mysql://175.24.42.155:3306/cjhy?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8'
-#    url: 'jdbc:mysql://localhost:3306/cjhy?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8'
+#    url: 'jdbc:mysql://localhost:3306/cjhy?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8'
     username: 'root'
     password: 'root123..'
     driver-class-name: com.mysql.jdbc.Driver
@@ -83,12 +83,12 @@ mybatis:
     mapper-locations: classpath*:/mapper/*.xml
     check-config-location: true
     executor-type: simple
-
 #上传图片的地址
 MultipartFile:
   #图片存放地址
 #  imagePath: D:/qixia/src/main/resources/static/
-  imagePath: /www/wwwroot/qs.akaba.cn/image/
+#  imagePath: /www/wwwroot/qs.akaba.cn/image/
+  imagePath: /www/wwwroot/www.qxcjhy.com/image/
 #  imagePath: E:/项目/image/
   #图片访问路径
   imageRequestPath: /image/

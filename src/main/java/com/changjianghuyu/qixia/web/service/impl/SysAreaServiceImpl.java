@@ -74,6 +74,7 @@ public class SysAreaServiceImpl implements SysAreaService {
         if(StringUtils.isNotBlank(sysArea.getAreaName())){
             SysArea tempSysArea = new SysArea();
             tempSysArea.setAreaName(sysArea.getAreaName());
+            tempSysArea.setLevel(sysArea.getLevel());
             List<SysArea> sysAreaList = sysAreaDao.queryAll(tempSysArea);
             if(sysAreaList.size() != 0){
                 result.put("message","地区名称重复！");
@@ -105,6 +106,24 @@ public class SysAreaServiceImpl implements SysAreaService {
             List<SysArea> areaList = sysAreaDao.queryAll(tempSysArea2);
             if(areaList.size() > 0){
                 result.put("message","请先清空子目录");
+                return result;
+            }
+        }
+        if(StringUtils.isNotBlank(sysArea.getAreaName())){
+            SysArea tempSysArea2 = new SysArea();
+            tempSysArea2.setAreaName(sysArea.getAreaName());
+            List<SysArea> sysAreaList = sysAreaDao.queryAll(tempSysArea2);
+            if(sysAreaList.size() != 0){
+                result.put("message","地区名称重复！");
+                return result;
+            }
+        }
+        if(StringUtils.isNotBlank(sysArea.getAreaCode())){
+            SysArea tempSysArea2 = new SysArea();
+            tempSysArea2.setAreaCode(sysArea.getAreaCode());
+            List<SysArea> sysAreaList = sysAreaDao.queryAll(tempSysArea2);
+            if(sysAreaList.size() != 0){
+                result.put("message","地区编码重复！");
                 return result;
             }
         }
@@ -162,8 +181,17 @@ public class SysAreaServiceImpl implements SysAreaService {
         if(StringUtils.isNotBlank(map.get("parentId"))){
             sysArea.setParentId(map.get("parentId"));
         }
+        if(StringUtils.isNotBlank(map.get("parentId"))){
+            sysArea.setParentId(map.get("parentId"));
+        }
         if(StringUtils.isNotBlank(map.get("areaName"))){
             sysArea.setAreaName(map.get("areaName"));
+        }
+        if(StringUtils.isNotBlank(map.get("streetId")) && StringUtils.isBlank(map.get("villageId"))){
+            sysArea.setId(Long.valueOf(map.get("streetId")));
+        }
+        if(StringUtils.isNotBlank(map.get("villageId"))){
+            sysArea.setId(Long.valueOf(map.get("villageId")));
         }
         if(StringUtils.isNotBlank(map.get("level"))){
             sysArea.setLevel(Integer.valueOf(map.get("level")));
@@ -176,11 +204,35 @@ public class SysAreaServiceImpl implements SysAreaService {
 
     /**
      * 查询所有街道列表
-     * @param sysArea
+     * @param map
      * @return
      */
     @Override
-    public List<SysArea> getAreaList(SysArea sysArea) {
+    public List<SysArea> getAreaList(Map<String,String> map) {
+        SysArea sysArea = new SysArea();
+        if(StringUtils.isNotBlank(map.get("areaCode"))){
+            sysArea.setAreaCode(map.get("areaCode"));
+        }
+        if(StringUtils.isNotBlank(map.get("parentId"))){
+            sysArea.setParentId(map.get("parentId"));
+        }
+        if(StringUtils.isNotBlank(map.get("areaName"))){
+            sysArea.setAreaName(map.get("areaName"));
+        }
+
+        if(StringUtils.isNotBlank(map.get("streetId")) && StringUtils.isBlank(map.get("villageId"))){
+            sysArea.setId(Long.valueOf(map.get("streetId")));
+        }
+        if(StringUtils.isNotBlank(map.get("villageId"))){
+            sysArea.setId(Long.valueOf(map.get("villageId")));
+        }
+        if(StringUtils.isNotBlank(map.get("level"))){
+            sysArea.setLevel(Integer.valueOf(map.get("level")));
+            //管理员获取街道列表时
+            if("8".equals(map.get("level")) && StringUtils.isNotBlank(map.get("streetId"))){
+                sysArea.setId(Long.valueOf(map.get("streetId")));
+            }
+        }
         sysArea.setIsDelete(0);
         return  sysAreaDaoSelf.queryAll(sysArea);
     }

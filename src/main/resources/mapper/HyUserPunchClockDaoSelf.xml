@@ -223,4 +223,74 @@
         </where>
         order by create_time desc
     </select>
+
+    <update id="updateTodayTime" parameterType="com.changjianghuyu.qixia.web.entity.HyUserPunchClock">
+        update cjhy.hy_user_punch_clock
+        <set>
+            <if test="beginTime != null">
+                begin_time = #{beginTime},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+        </set>
+        where punch_clock_time_id = #{punchClockTimeId}
+        and DATE_FORMAT(create_time ,"%Y-%m-%d") = DATE_FORMAT(NOW() ,"%Y-%m-%d")
+    </update>
+
+    <!--按照用户分组查询-->
+    <select id="queryAllGroupByUser" resultMap="HyUserPunchClockMap">
+        select
+        id, clock_longitude, clock_latitude, begin_time, end_time, clock_status, user_id, street_id, village_id,
+        punch_clock_id, punch_clock_location_id, punch_clock_time_id, is_delete, create_time
+        from cjhy.hy_user_punch_clock
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="clockLongitude != null">
+                and clock_longitude = #{clockLongitude}
+            </if>
+            <if test="clockLatitude != null">
+                and clock_latitude = #{clockLatitude}
+            </if>
+            <if test="beginTime != null">
+                and begin_time = #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and end_time = #{endTime}
+            </if>
+            <if test="clockStatus != null">
+                and clock_status = #{clockStatus}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="streetId != null">
+                and street_id = #{streetId}
+            </if>
+            <if test="villageId != null">
+                and village_id = #{villageId}
+            </if>
+            <if test="punchClockId != null">
+                and punch_clock_id = #{punchClockId}
+            </if>
+            <if test="punchClockLocationId != null">
+                and punch_clock_location_id = #{punchClockLocationId}
+            </if>
+            <if test="punchClockTimeId != null">
+                and punch_clock_time_id = #{punchClockTimeId}
+            </if>
+            <if test="isDelete != null">
+                and is_delete = #{isDelete}
+            </if>
+            <if test="isDelete == null">
+                and is_delete = 0
+            </if>
+            <if test="createTime != null">
+                and DATE_FORMAT(create_time ,"%Y-%m-%d")= DATE_FORMAT(#{createTime} ,"%Y-%m-%d")
+            </if>
+        </where>
+        group by user_id
+    </select>
 </mapper>

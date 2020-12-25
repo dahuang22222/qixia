@@ -34,13 +34,15 @@ public class HyPunchClockController {
     @PostMapping("/punchClock")
     public MsgHander punchClock(@RequestBody HyPunchClock hyPunchClock) {
         MsgHander msg = new MsgHander();
-        msg.setMessage("打卡成功");
         msg.setStatus(HanderCode.CONTROLLER_CODE_SUCCESS);
         try {
-            Map<String, Object> map= hyPunchClockService.punchClock(hyPunchClock);
-            msg.setContext(map);
+            Map<String, Object> result =  hyPunchClockService.punchClock(hyPunchClock);
+            msg.setMessage(String.valueOf(result.get("msg")));
+            if(null != result.get("status") && "1".equals(String.valueOf(result.get("status")))){}else{
+                msg.setStatus(HanderCode.CONTROLLER_CODE_ERROR);
+            }
         } catch (Exception e) {
-            msg.setMessage("系统异常");
+            msg.setMessage("该区域已打卡成功，请勿重复打卡！");
             msg.setStatus(HanderCode.CONTROLLER_CODE_ERROR);
         }
         return msg;
@@ -68,14 +70,13 @@ public class HyPunchClockController {
     }
 
     /**
-     * 通过主键查询单条数据
+     * 7.3通过主键查询单条数据
      *
      * @param id 主键
      * @return 单条数据
      */
-    @GetMapping("selectOne")
+    @GetMapping("/selectOne")
     public MsgHander selectOne(Long id) {
-
         return new MsgHander(this.hyPunchClockService.queryById(id));
     }
 

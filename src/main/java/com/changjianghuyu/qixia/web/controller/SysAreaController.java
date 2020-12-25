@@ -113,12 +113,12 @@ public class SysAreaController {
     /**
      * 3.6通过地理信息获取
      *
-     * @param sysArea
+     * @param map
      * @return 所有的地区数据
      */
     @GetMapping("/getAreaList")
-    public MsgHander getAreaList(SysArea sysArea) {
-        return  new MsgHander(sysAreaService.getAreaList(sysArea));
+    public MsgHander getAreaList(@RequestParam Map<String,String> map) {
+        return  new MsgHander(sysAreaService.getAreaList(map));
     }
 
     /**

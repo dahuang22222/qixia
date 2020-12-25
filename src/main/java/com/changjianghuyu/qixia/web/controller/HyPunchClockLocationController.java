@@ -114,7 +114,7 @@ public class HyPunchClockLocationController {
         HyPunchClockLocation insert = hyPunchClockLocationService.insert(hyPunchClockLocation);
         msg.setContext(insert);
         if(null == insert){
-            msg.setMessage("系统异常");
+            msg.setMessage("打卡地区名称重复！");
             msg.setStatus(HanderCode.CONTROLLER_CODE_ERROR);
         }
         return msg;

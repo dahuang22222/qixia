@@ -69,16 +69,20 @@ public class HyUserServiceImpl implements HyUserService {
      * @return 实例对象
      */
     @Override
-    public HyUser insert(HyUser hyUser) {
+    public Map<String, Object> insert(HyUser hyUser) {
+        Map<String, Object> result = new HashMap<>();
+        hyUser.setId(null);
         if(StringUtils.isBlank(hyUser.getPhone())){
-            return null;
+            result.put("message","手机号码不能为空！");
+            return result;
         }
         //判断用户是否已经存在
         HyUser user = new HyUser();
         user.setPhone(hyUser.getPhone());
         List<HyUser> hyUsers = hyUserDao.queryAll(user);
         if(!CollectionUtils.isEmpty(hyUsers)){
-            return null;
+            result.put("message","手机号码已经存在！");
+            return result;
         }
         //密码加密
         if(StringUtils.isNotBlank(hyUser.getPassword())) {
@@ -92,14 +96,19 @@ public class HyUserServiceImpl implements HyUserService {
             SysArea sysArea = sysAreaDao.queryById(hyUser.getVillageId());
             hyUser.setVillage(sysArea.getAreaName());
             hyUser.setStreetId(Long.valueOf(sysArea.getParentId()));
-            SysArea streetArea = sysAreaDao.queryById(Long.valueOf(sysArea.getParentId()));
-            hyUser.setStreet(streetArea.getAreaName());
+
+        }
+        if(null != hyUser.getStreetId()){
+            SysArea sysArea = sysAreaDao.queryById(hyUser.getStreetId());
+            hyUser.setStreet(sysArea.getAreaName());
         }
         hyUser.setIsDelete(0);
         hyUser.setCreateTime(new Date());
         //插入用户
         this.hyUserDao.insert(hyUser);
-        return hyUser;
+        result.put("message","插入成功！");
+        result.put("user",hyUser);
+        return result;
     }
 
     /**
@@ -146,22 +155,36 @@ public class HyUserServiceImpl implements HyUserService {
      * @return 实例对象
      */
     @Override
-    public HyUser update(HyUser hyUser) {
+    public Map<String, Object> update(HyUser hyUser) {
+        Map<String, Object> result = new HashMap<>();
+        //判断用户是否已经存在
+        HyUser user = new HyUser();
+        user.setPhone(hyUser.getPhone());
+        List<HyUser> hyUsers = hyUserDao.queryAll(user);
+        if(!CollectionUtils.isEmpty(hyUsers)){
+            if(hyUsers.get(0).getId() != hyUser.getId()) {
+                result.put("message", "手机号已经存在！");
+                return result;
+            }
+        }
         //密码加密
         if(StringUtils.isNotBlank(hyUser.getPassword())) {
             String pwd = MD5Utils.encodedMD5(hyUser.getPassword());
             hyUser.setPassword(pwd);
         }
-        if(hyUser.getStreetId() != null && hyUser.getStreet() == null ) {
-            SysArea sysArea = sysAreaService.queryById(hyUser.getVillageId());
+        if(hyUser.getStreetId() != null) {
+            SysArea sysArea = sysAreaService.queryById(hyUser.getStreetId());
             hyUser.setStreet(sysArea.getAreaName());
         }
-        if(hyUser.getVillageId() != null && hyUser.getVillage() == null ) {
+        if(hyUser.getVillageId() != null) {
             SysArea sysArea = sysAreaService.queryById(hyUser.getVillageId());
             hyUser.setVillage(sysArea.getAreaName());
         }
         this.hyUserDaoSelf.update(hyUser);
-        return this.queryById(hyUser.getId());
+        result.put("message","插入成功！");
+        HyUser user2 = this.queryById(hyUser.getId());
+        result.put("user",user2);
+        return result;
     }
 
     /**
@@ -206,6 +229,12 @@ public class HyUserServiceImpl implements HyUserService {
         }
         if(StringUtils.isNotBlank(map.get("street"))){
             hyUser.setStreet(map.get("street"));
+        }
+        if(StringUtils.isNotBlank(map.get("villageId"))){
+            hyUser.setVillageId(Long.valueOf(map.get("villageId")));
+        }
+        if(StringUtils.isNotBlank(map.get("streetId"))){
+            hyUser.setStreetId(Long.valueOf(map.get("streetId")));
         }
         PageHelper.startPage(pageNo,pageSize);
         List<HyUser> userList = hyUserDaoSelf.queryAllByUser(hyUser);

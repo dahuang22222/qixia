@@ -37,4 +37,19 @@ public interface HyUserPunchClockDaoSelf {
      */
     List<HyUserPunchClockMap> getUserClockCensusList(HyUserPunchClock hyUserPunchClock);
 
+    /**
+     * 根据打卡的时间id,修改用户当天统计的打卡时间
+     * @param hyUserPunchClock
+     * @return
+     */
+    int updateTodayTime(HyUserPunchClock hyUserPunchClock);
+
+    /**
+     * 按照用户分组查询
+     * @param hyUserPunchClock
+     * @return
+     */
+    List<HyUserPunchClock> queryAllGroupByUser(HyUserPunchClock hyUserPunchClock);
+
+
 }

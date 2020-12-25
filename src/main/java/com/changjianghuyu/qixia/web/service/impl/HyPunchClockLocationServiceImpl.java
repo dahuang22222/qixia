@@ -70,6 +70,14 @@ public class HyPunchClockLocationServiceImpl implements HyPunchClockLocationServ
      */
     @Override
     public HyPunchClockLocation insert(HyPunchClockLocation hyPunchClockLocation) {
+        HyPunchClockLocation tempHyPunchClockLocation = new HyPunchClockLocation();
+        tempHyPunchClockLocation.setAddressName(hyPunchClockLocation.getAddressName());
+        tempHyPunchClockLocation.setVillageId(hyPunchClockLocation.getVillageId());
+        List<HyPunchClockLocation> hyPunchClockLocations = hyPunchClockLocationDao.queryAll(tempHyPunchClockLocation);
+        if(hyPunchClockLocations.size() > 0){
+            return null;
+        }
+
         hyPunchClockLocation.setDispOrder(5);
         hyPunchClockLocation.setIsDelete(0);
         hyPunchClockLocation.setCreateTime(new Date());

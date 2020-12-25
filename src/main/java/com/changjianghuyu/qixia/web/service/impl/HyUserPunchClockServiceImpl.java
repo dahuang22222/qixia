@@ -144,4 +144,11 @@ public class HyUserPunchClockServiceImpl implements HyUserPunchClockService {
         hyUserPunchClock.setCreateTime(new Date());
         return hyUserPunchClockDaoSelf.getTodayList(hyUserPunchClock);
     }
+
+    @Override
+    public int updateTodayTime(HyUserPunchClock hyUserPunchClock) {
+        return hyUserPunchClockDaoSelf.updateTodayTime(hyUserPunchClock);
+    }
+
+
 }

@@ -48,6 +48,11 @@ public class LoginServiceImpl implements LoginService {
             if (!CollectionUtils.isEmpty(userList)) {
                 //密码
                 HyUser user = userList.get(0);
+                //普通用户不允许登陆后台
+                if(user.getUserType() == 5){
+                    result.put("message","暂无权限登陆！");
+                    return result;
+                }
                 String userPassWord = userList.get(0).getPassword();
 
                 String passWord = MD5Utils.encodedMD5(map.get("password"));

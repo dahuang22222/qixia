@@ -29,7 +29,7 @@ public class HyUserPunchClockController {
     private HyUserPunchClockService hyUserPunchClockService;
 
     /**
-     * 通过主键查询单条数据
+     * 9.3通过主键查询单条数据
      *
      * @param id 主键
      * @return 单条数据
@@ -41,7 +41,7 @@ public class HyUserPunchClockController {
 
 
     /**
-     * 分页获取统计列表
+     * 9.1分页获取统计列表
      * @param map
      * @return
      */
@@ -60,7 +60,7 @@ public class HyUserPunchClockController {
     }
 
     /**
-     * 用户获取自己的打卡统计
+     * 9.2用户获取自己的打卡统计
      * @param hyUserPunchClock
      * @return
      */
@@ -77,4 +77,5 @@ public class HyUserPunchClockController {
         }
         return msg;
     }
+
 }

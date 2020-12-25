@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * 第三方信息表(HyUserOauth)表控制层
  *
- * @author huangkewang
+ * @author huangkewanggetUserPunchClockList
  * @since 2020-11-11 16:25:08
  */
 @RestController
