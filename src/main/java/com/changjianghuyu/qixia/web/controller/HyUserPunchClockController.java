@@ -28,16 +28,7 @@ public class HyUserPunchClockController {
     @Resource
     private HyUserPunchClockService hyUserPunchClockService;
 
-    /**
-     * 9.3通过主键查询单条数据
-     *
-     * @param id 主键
-     * @return 单条数据
-     */
-    @GetMapping("/selectOne")
-    public HyUserPunchClock selectOne(Long id) {
-        return this.hyUserPunchClockService.queryById(id);
-    }
+
 
 
     /**
@@ -72,6 +63,36 @@ public class HyUserPunchClockController {
         try {
             msg.setContext(hyUserPunchClockService.queryAll(hyUserPunchClock));
         } catch (Exception e) {
+            msg.setMessage("系统异常");
+            msg.setStatus(HanderCode.CONTROLLER_CODE_ERROR);
+        }
+        return msg;
+    }
+
+    /**
+     * 9.3通过主键查询单条数据
+     *
+     * @param id 主键
+     * @return 单条数据
+     */
+    @GetMapping("/selectOne")
+    public HyUserPunchClock selectOne(Long id) {
+        return this.hyUserPunchClockService.queryById(id);
+    }
+
+    /**
+     * 9.4（管理员）获取用户打卡的合格信息
+     * @param map
+     * @return
+     */
+    @GetMapping("/getClockList")
+    public MsgHander getClockList(@RequestParam Map<String,String> map){
+        MsgHander msg = new MsgHander();
+        msg.setMessage("获取成功");
+        msg.setStatus(HanderCode.CONTROLLER_CODE_SUCCESS);
+        try {
+            msg.setContext(hyUserPunchClockService.getClockList(map));
+        } catch (ParseException e) {
             msg.setMessage("系统异常");
             msg.setStatus(HanderCode.CONTROLLER_CODE_ERROR);
         }

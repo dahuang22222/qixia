@@ -1,7 +1,10 @@
 package com.changjianghuyu.qixia.web.service.impl;
 
+import com.changjianghuyu.qixia.web.common.task.UserMessageTask;
+import com.changjianghuyu.qixia.web.dao.HyUserMessageDao;
 import com.changjianghuyu.qixia.web.dao.SysNoticeDao;
 import com.changjianghuyu.qixia.web.dao.SysNoticeDaoSelf;
+import com.changjianghuyu.qixia.web.entity.HyUserMessage;
 import com.changjianghuyu.qixia.web.entity.SysArea;
 import com.changjianghuyu.qixia.web.entity.SysNotice;
 import com.changjianghuyu.qixia.web.service.SysNoticeService;
@@ -32,6 +35,9 @@ public class SysNoticeServiceImpl implements SysNoticeService {
     @Resource
     private SysNoticeDaoSelf sysNoticeDaoSelf;
 
+    @Resource
+    private HyUserMessageDao hyUserMessageDao;
+
     /**
      * 通过ID查询单条数据
      *
@@ -39,7 +45,14 @@ public class SysNoticeServiceImpl implements SysNoticeService {
      * @return 实例对象
      */
     @Override
-    public SysNotice queryById(Long id) {
+    public SysNotice queryById(Long id,Long userId) {
+        if(null == userId ){
+            HyUserMessage hyUserMessage = new HyUserMessage();
+            hyUserMessage.setUserId(userId);
+            hyUserMessage.setConnectionId(id);
+            hyUserMessage.setIsRead(1);
+            hyUserMessageDao.update(hyUserMessage);
+        }
         return this.sysNoticeDao.queryById(id);
     }
 
@@ -72,6 +85,11 @@ public class SysNoticeServiceImpl implements SysNoticeService {
             sysNotice.setTimeUser(0);
         }
         this.sysNoticeDao.insert(sysNotice);
+        //启动新的线程任务给用户发送公告信息
+        UserMessageTask userMessageTask = new UserMessageTask(
+                1L, sysNotice.getId(), 1, sysNotice.getContent()
+        );
+        new Thread(userMessageTask).start();
         return sysNotice;
     }
 
@@ -84,7 +102,7 @@ public class SysNoticeServiceImpl implements SysNoticeService {
     @Override
     public SysNotice update(SysNotice sysNotice) {
         this.sysNoticeDao.update(sysNotice);
-        return this.queryById(sysNotice.getId());
+        return this.queryById(sysNotice.getId(),null);
     }
 
     /**

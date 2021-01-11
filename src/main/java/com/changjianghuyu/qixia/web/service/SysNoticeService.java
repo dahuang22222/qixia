@@ -21,7 +21,7 @@ public interface SysNoticeService {
      * @param id 主键
      * @return 实例对象
      */
-    SysNotice queryById(Long id);
+    SysNotice queryById(Long id,Long userId);
 
     /**
      * 查询多条数据

@@ -22,10 +22,12 @@
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="HyPunchClockMap">
-        select
-        id, clock_longitude, clock_latitude, clock_address_name, user_id, clock_time, clock_status, street_id, street,
-        village_id, village, is_delete, create_time, punch_clock_location_id, punch_clock_time_id
-        from cjhy.hy_punch_clock
+        SELECT         t1.id, t1.clock_longitude, t1.clock_latitude,
+        t2.address_name clock_address_name, t1.user_id, t1.clock_time, t1.clock_status,
+        t1.street_id,t1.street,t1. village_id, t1.village, t1.is_delete,
+        t1.create_time, t1.punch_clock_location_id, t1.punch_clock_time_id
+        FROM hy_punch_clock t1
+        LEFT JOIN hy_punch_clock_location t2 ON t1.punch_clock_location_id = t2.id
         <where>
             <if test="id != null">
                 and id = #{id}
@@ -42,8 +44,20 @@
             <if test="userId != null">
                 and user_id = #{userId}
             </if>
-            <if test="clockTime != null">
-                and DATE_FORMAT(clock_time ,"%Y-%m-%d")= DATE_FORMAT(#{clockTime} ,"%Y-%m-%d")
+            <if test="timeLength == 1">
+                <if test="clockTime != null">
+                    and DATE_FORMAT(clock_time ,"%Y")= DATE_FORMAT(#{clockTime} ,"%Y")
+                </if>
+            </if>
+            <if test="timeLength == 2">
+                <if test="clockTime != null">
+                    and DATE_FORMAT(clock_time ,"%Y-%m")= DATE_FORMAT(#{clockTime} ,"%Y-%m")
+                </if>
+            </if>
+            <if test="timeLength == 3">
+                <if test="clockTime != null">
+                    and DATE_FORMAT(clock_time ,"%Y-%m-%d")= DATE_FORMAT(#{clockTime} ,"%Y-%m-%d")
+                </if>
             </if>
             <if test="streetId != null">
                 and street_id = #{streetId}

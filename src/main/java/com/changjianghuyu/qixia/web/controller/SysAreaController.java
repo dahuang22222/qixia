@@ -1,5 +1,7 @@
 package com.changjianghuyu.qixia.web.controller;
 
+import com.changjianghuyu.qixia.web.common.BaseController;
+import com.changjianghuyu.qixia.web.common.jwt.UserInfo;
 import com.changjianghuyu.qixia.web.common.msg.HanderCode;
 import com.changjianghuyu.qixia.web.common.msg.MsgHander;
 import com.changjianghuyu.qixia.web.entity.SysArea;
@@ -18,7 +20,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/sysArea")
-public class SysAreaController {
+public class SysAreaController extends BaseController {
     /**
      * 服务对象
      */
@@ -44,6 +46,8 @@ public class SysAreaController {
      */
     @GetMapping("/getAreaListByPage")
     public MsgHander getAreaListByPage(@RequestParam Map<String,String> map) {
+        UserInfo userInfo = getUserInfo();
+        System.out.println(userInfo.toString());
         return  new MsgHander(sysAreaService.getAreaListByPage(map));
     }
 
@@ -129,6 +133,7 @@ public class SysAreaController {
      */
     @GetMapping("/getAreaExpandListByPage")
     public MsgHander getAreaExpandListByPage(@RequestParam Map<String,String> map) {
+        UserInfo userInfo = getUserInfo();
         return  new MsgHander(sysAreaService.getAreaExpandListByPage(map));
     }
 

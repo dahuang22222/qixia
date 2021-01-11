@@ -279,4 +279,9 @@ public class HyUserServiceImpl implements HyUserService {
         result.put("message","更新成功！");
         return result;
     }
+
+    @Override
+    public List<HyUser> queryAll(HyUser hyUser) {
+        return hyUserDao.queryAll(hyUser);
+    }
 }

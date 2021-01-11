@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.changjianghuyu.qixia.web.dao.HyUserMessageDao">
+
+    <resultMap type="com.changjianghuyu.qixia.web.entity.HyUserMessage" id="HyUserMessageMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="connectionId" column="connection_id" jdbcType="INTEGER"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="isRead" column="is_read" jdbcType="INTEGER"/>
+        <result property="methond" column="methond" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="HyUserMessageMap">
+        select
+          id, user_id, connection_id, type, content, is_delete, create_time, is_read, methond
+        from cjhy.hy_user_message
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="HyUserMessageMap">
+        select
+          id, user_id, connection_id, type, content, is_delete, create_time, is_read, methond
+        from cjhy.hy_user_message
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="HyUserMessageMap">
+        select
+        id, user_id, connection_id, type, content, is_delete, create_time, is_read, methond
+        from cjhy.hy_user_message
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="connectionId != null">
+                and connection_id = #{connectionId}
+            </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="isDelete != null">
+                and is_delete = #{isDelete}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="isRead != null">
+                and is_read = #{isRead}
+            </if>
+            <if test="methond != null">
+                and methond = #{methond}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into cjhy.hy_user_message(user_id, connection_id, type, content, is_delete, create_time, is_read, methond)
+        values (#{userId}, #{connectionId}, #{type}, #{content}, #{isDelete}, #{createTime}, #{isRead}, #{methond})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into cjhy.hy_user_message(user_id, connection_id, type, content, is_delete, create_time, is_read,
+        methond)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userId}, #{entity.connectionId}, #{entity.type}, #{entity.content}, #{entity.isDelete},
+            #{entity.createTime}, #{entity.isRead}, #{entity.methond})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into cjhy.hy_user_message(user_id, connection_id, type, content, is_delete, create_time, is_read,
+        methond)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userId}, #{entity.connectionId}, #{entity.type}, #{entity.content}, #{entity.isDelete},
+            #{entity.createTime}, #{entity.isRead}, #{entity.methond})
+        </foreach>
+        on duplicate key update
+        user_id = values(user_id) , connection_id = values(connection_id) , type = values(type) , content =
+        values(content) , is_delete = values(is_delete) , create_time = values(create_time) , is_read = values(is_read)
+        , methond = values(methond)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update cjhy.hy_user_message
+        <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="connectionId != null">
+                connection_id = #{connectionId},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="isDelete != null">
+                is_delete = #{isDelete},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="isRead != null">
+                is_read = #{isRead},
+            </if>
+            <if test="methond != null">
+                methond = #{methond},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from cjhy.hy_user_message where id = #{id}
+    </delete>
+
+</mapper>

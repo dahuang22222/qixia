@@ -85,4 +85,11 @@ public interface HyUserService {
      */
     Map<String, Object> updateUserPassword(Map<String,String> map);
 
+    /**
+     * 查询所有用户列表
+     * @param hyUser
+     * @return
+     */
+    public List<HyUser> queryAll(HyUser hyUser);
+
 }

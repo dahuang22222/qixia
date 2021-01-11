@@ -113,7 +113,11 @@ public class SysAreaServiceImpl implements SysAreaService {
             SysArea tempSysArea2 = new SysArea();
             tempSysArea2.setAreaName(sysArea.getAreaName());
             List<SysArea> sysAreaList = sysAreaDao.queryAll(tempSysArea2);
-            if(sysAreaList.size() != 0){
+            if(sysAreaList.size() ==1 && sysAreaList.get(0).getId() != sysArea.getId()){
+                result.put("message","地区名称重复！");
+                return result;
+            }
+            if(sysAreaList.size() > 1){
                 result.put("message","地区名称重复！");
                 return result;
             }
@@ -122,7 +126,11 @@ public class SysAreaServiceImpl implements SysAreaService {
             SysArea tempSysArea2 = new SysArea();
             tempSysArea2.setAreaCode(sysArea.getAreaCode());
             List<SysArea> sysAreaList = sysAreaDao.queryAll(tempSysArea2);
-            if(sysAreaList.size() != 0){
+            if(sysAreaList.size() ==1 && sysAreaList.get(0).getId() != sysArea.getId()){
+                result.put("message","地区编码重复！");
+                return result;
+            }
+            if(sysAreaList.size() > 1){
                 result.put("message","地区编码重复！");
                 return result;
             }

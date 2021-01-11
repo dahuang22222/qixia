@@ -1,5 +1,7 @@
 package com.changjianghuyu.qixia.web.controller;
 
+import com.changjianghuyu.qixia.web.common.BaseController;
+import com.changjianghuyu.qixia.web.common.jwt.UserInfo;
 import com.changjianghuyu.qixia.web.common.msg.HanderCode;
 import com.changjianghuyu.qixia.web.common.msg.MsgHander;
 import com.changjianghuyu.qixia.web.entity.SysNotice;
@@ -18,7 +20,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/sysnotice")
-public class SysNoticeController {
+public class SysNoticeController extends BaseController {
     /**
      * 服务对象
      */
@@ -33,10 +35,12 @@ public class SysNoticeController {
      */
     @GetMapping("/getSysNoticeById")
     public MsgHander getSysNoticeById(Long id) {
+        UserInfo userInfo = getUserInfo();
+        Long userId = userInfo.getId();
         MsgHander msg = new MsgHander();
         msg.setMessage("获取成功");
         msg.setStatus(HanderCode.CONTROLLER_CODE_SUCCESS);
-        msg.setContext(sysNoticeService.queryById(id));
+        msg.setContext(sysNoticeService.queryById(id,userId));
         return msg;
     }
 
@@ -87,7 +91,7 @@ public class SysNoticeController {
     @PostMapping("/insertSysNotice")
     public MsgHander insertSysNotice(@RequestBody SysNotice sysNotice) {
         MsgHander msg = new MsgHander();
-        msg.setMessage("获取成功");
+        msg.setMessage("新建成功");
         msg.setStatus(HanderCode.CONTROLLER_CODE_SUCCESS);
         SysNotice insert = sysNoticeService.insert(sysNotice);
         msg.setContext(insert);

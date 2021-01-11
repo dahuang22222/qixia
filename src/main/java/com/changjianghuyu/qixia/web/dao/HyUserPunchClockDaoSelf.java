@@ -2,9 +2,12 @@ package com.changjianghuyu.qixia.web.dao;
 
 import com.changjianghuyu.qixia.web.entity.HyUserPunchClock;
 import com.changjianghuyu.qixia.web.entity.HyUserPunchClockMap;
+import com.changjianghuyu.qixia.web.pojo.PunchClockInfoPojo;
+import com.changjianghuyu.qixia.web.pojo.UserPunchClockInfoPojo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户打卡统计表(HyUserPunchClock)表数据库访问层
@@ -51,5 +54,17 @@ public interface HyUserPunchClockDaoSelf {
      */
     List<HyUserPunchClock> queryAllGroupByUser(HyUserPunchClock hyUserPunchClock);
 
+    /**
+     * 获取打卡详情信息
+     * @param map
+     * @return
+     */
+    List<PunchClockInfoPojo> getClockList (Map<String,String> map);
 
+    /**
+     * 获取打卡详情信息
+     * @param map
+     * @return
+     */
+    List<UserPunchClockInfoPojo> getClockListInfoList (Map<String,String> map);
 }

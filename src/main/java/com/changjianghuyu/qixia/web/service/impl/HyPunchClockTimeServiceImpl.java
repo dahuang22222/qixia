@@ -87,6 +87,7 @@ public class HyPunchClockTimeServiceImpl implements HyPunchClockTimeService {
         List<HyUserPunchClock> list = hyUserPunchClockDaoSelf.queryAllGroupByUser(hyUserPunchClock);
 
         hyPunchClockTime.setIsDelete(0);
+        hyPunchClockTime.setCreateTime(new Date());
         this.hyPunchClockTimeDao.insert(hyPunchClockTime);
 
         //存储过,则新增这个点用户打卡统计

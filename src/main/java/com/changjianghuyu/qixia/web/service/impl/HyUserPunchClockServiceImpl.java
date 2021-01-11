@@ -5,6 +5,9 @@ import com.changjianghuyu.qixia.web.dao.HyUserPunchClockDaoSelf;
 import com.changjianghuyu.qixia.web.entity.HyInformationFeedback;
 import com.changjianghuyu.qixia.web.entity.HyUserPunchClock;
 import com.changjianghuyu.qixia.web.entity.HyUserPunchClockMap;
+import com.changjianghuyu.qixia.web.pojo.PunchClockInfoPojo;
+import com.changjianghuyu.qixia.web.pojo.UserPunchClockInfoPojo;
+import com.changjianghuyu.qixia.web.pojo.UserPunchClockPojo;
 import com.changjianghuyu.qixia.web.service.HyUserPunchClockService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -16,6 +19,7 @@ import java.math.BigDecimal;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -148,6 +152,61 @@ public class HyUserPunchClockServiceImpl implements HyUserPunchClockService {
     @Override
     public int updateTodayTime(HyUserPunchClock hyUserPunchClock) {
         return hyUserPunchClockDaoSelf.updateTodayTime(hyUserPunchClock);
+    }
+
+    @Override
+    public UserPunchClockPojo getClockList(Map<String, String> map) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        UserPunchClockPojo userPunchClockPojo = new UserPunchClockPojo();
+
+        Integer pageNo = 1;
+        Integer pageSize = 12;
+        if(StringUtils.isNotBlank(map.get("pageNo"))){
+            pageNo = Integer.valueOf(map.get("pageNo"));//页码
+        }
+        if(StringUtils.isNotBlank(map.get("pageSize"))){
+            pageSize = Integer.valueOf(map.get("pageSize"));//页面数
+        }
+        if(StringUtils.isNotBlank(map.get("clockTime"))){
+            int length = map.get("clockTime").split("-").length;
+            map.put("timeLength",String.valueOf(length));
+            if(length == 1){
+                map.put("clockTime",map.get("clockTime")+"-01-01");
+            }
+            if(length == 2){
+                map.put("clockTime",map.get("clockTime")+"-01");
+            }
+        }
+        PageHelper.startPage(pageNo,pageSize);
+        List<UserPunchClockInfoPojo> userPunchClockInfoPojoList = hyUserPunchClockDaoSelf.getClockListInfoList(map);
+//        List<UserPunchClockInfoPojo> resultList = new ArrayList<>();
+        for (UserPunchClockInfoPojo tempPojo : userPunchClockInfoPojoList){
+            map.put("clockDate",sdf.format(tempPojo.getClockDate()));
+            List<PunchClockInfoPojo> clockList = hyUserPunchClockDaoSelf.getClockList(map);
+            for (PunchClockInfoPojo punchClockInfoPojo: clockList) {
+                if(punchClockInfoPojo.getClockStatus() != 1){
+                    tempPojo.setClockStatus(punchClockInfoPojo.getClockStatus());
+                }
+            }
+            tempPojo.setPunchClockInfoList(clockList);
+        }
+        PageInfo userPunchClockInfoPojoPage = new PageInfo(userPunchClockInfoPojoList);
+        //合格次数统计
+        int qualifiedNumber = 0;
+        //不合格次数统计
+        int notQualifiedNumber = 0;
+        List<UserPunchClockInfoPojo> numberList = hyUserPunchClockDaoSelf.getClockListInfoList(map);
+        for (UserPunchClockInfoPojo tempPojo : numberList){
+            if(tempPojo.getClockStatus() == 1){
+                qualifiedNumber += 1;
+            }else{
+                notQualifiedNumber += 1;
+            }
+        }
+        userPunchClockPojo.setClockList(userPunchClockInfoPojoPage);
+        userPunchClockPojo.setQualifiedNumber(qualifiedNumber);
+        userPunchClockPojo.setNotQualifiedNumber(notQualifiedNumber);
+        return userPunchClockPojo;
     }
 
 

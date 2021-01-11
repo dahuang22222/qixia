@@ -1,6 +1,7 @@
 package com.changjianghuyu.qixia.web.dao;
 
 import com.changjianghuyu.qixia.web.entity.HyPunchClock;
+import com.changjianghuyu.qixia.web.entity.HyPunchClockExpand;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface HyPunchClockDaoSelf {
      * @param hyPunchClock 实例对象
      * @return 对象列表
      */
-    List<HyPunchClock> queryAll(HyPunchClock hyPunchClock);
+    List<HyPunchClock> queryAll(HyPunchClockExpand hyPunchClock);
 
     /**
      * 查询该用户近两个小时的打卡地点

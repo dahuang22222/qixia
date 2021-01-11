@@ -28,6 +28,7 @@ public class HyUserExpand extends HyUser implements Serializable {
         this.setId(user.getId());
         this.setUserName(user.getUserName());
         this.setUserType(user.getUserType());
+        this.setImage(user.getImage());
         this.setPhone(user.getPhone());
         this.setAge(user.getAge());
         this.setStreet(user.getStreet());

@@ -38,6 +38,12 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
         if(request.getRequestURI().indexOf("/sysArea/getAreaList") != -1  || request.getRequestURI().indexOf("/imageUpload") != -1 || request.getRequestURI().indexOf("/image") != -1){
             return true;
         }
+        if(request.getRequestURI().indexOf("/page") != -1 || (request.getRequestURI().indexOf("/guanli") != -1)){
+            return true;
+        }
+        if(request.getRequestURI().endsWith("css") || request.getRequestURI().endsWith("js") || request.getRequestURI().endsWith("html") || request.getRequestURI().endsWith("ico") || request.getRequestURI().endsWith("pdf")){
+            return true;
+        }
         //  获取用户 token
         String token = request.getHeader(JwtUtils.getHeaderKey());
         if (StringUtils.isBlank(token)) {

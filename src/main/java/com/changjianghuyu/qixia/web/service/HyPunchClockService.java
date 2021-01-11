@@ -1,6 +1,7 @@
 package com.changjianghuyu.qixia.web.service;
 
 import com.changjianghuyu.qixia.web.entity.HyPunchClock;
+import com.changjianghuyu.qixia.web.entity.HyPunchClockExpand;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -78,7 +79,7 @@ public interface HyPunchClockService {
      * @param hyPunchClock 查询的参数
      * @return 对象列表
      */
-    List<HyPunchClock> getTodayHyPunchClockList(HyPunchClock hyPunchClock);
+    List<HyPunchClock> getTodayHyPunchClockList(HyPunchClockExpand hyPunchClock);
 
 
 }

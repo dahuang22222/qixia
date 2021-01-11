@@ -1,6 +1,7 @@
 package com.changjianghuyu.qixia.web.service;
 
 import com.changjianghuyu.qixia.web.entity.HyUserPunchClock;
+import com.changjianghuyu.qixia.web.pojo.UserPunchClockPojo;
 import com.github.pagehelper.PageInfo;
 
 import java.text.ParseException;
@@ -77,4 +78,12 @@ public interface HyUserPunchClockService {
      * @return
      */
     int updateTodayTime(HyUserPunchClock hyUserPunchClock);
+
+    /**
+     * 获取打卡信息
+     * @param map
+     * @return
+     * @throws ParseException
+     */
+    public UserPunchClockPojo getClockList(Map<String,String> map) throws ParseException;
 }

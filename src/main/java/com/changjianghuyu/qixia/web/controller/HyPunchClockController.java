@@ -4,6 +4,7 @@ import com.changjianghuyu.qixia.web.common.msg.HanderCode;
 import com.changjianghuyu.qixia.web.common.msg.MsgHander;
 import com.changjianghuyu.qixia.web.entity.HyInformationFeedback;
 import com.changjianghuyu.qixia.web.entity.HyPunchClock;
+import com.changjianghuyu.qixia.web.entity.HyPunchClockExpand;
 import com.changjianghuyu.qixia.web.service.HyPunchClockService;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,7 +60,7 @@ public class HyPunchClockController {
         msg.setMessage("获取成功");
         msg.setStatus(HanderCode.CONTROLLER_CODE_SUCCESS);
         try {
-            HyPunchClock hyPunchClock = new HyPunchClock();
+            HyPunchClockExpand hyPunchClock = new HyPunchClockExpand();
             hyPunchClock.setUserId(userId);
             msg.setContext(hyPunchClockService.getTodayHyPunchClockList(hyPunchClock));
         } catch (Exception e) {

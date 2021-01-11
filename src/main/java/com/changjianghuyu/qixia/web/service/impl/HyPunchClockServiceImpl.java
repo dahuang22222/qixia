@@ -204,6 +204,7 @@ public class HyPunchClockServiceImpl implements HyPunchClockService {
                 tempHyUserPunchClock.setPunchClockLocationId(hyUserPunchClock.getPunchClockLocationId());
                 tempHyUserPunchClock.setCreateTime(new Date());
                 tempHyUserPunchClock.setClockStatus(1);
+                tempHyUserPunchClock.setUserId(hyPunchClock.getUserId());
                 List<HyUserPunchClock> todayList = hyUserPunchClockDaoSelf.getTodayList(tempHyUserPunchClock);
                 if(todayList.size()>0){
                     int a =  5/0;
@@ -318,12 +319,22 @@ public class HyPunchClockServiceImpl implements HyPunchClockService {
         if(StringUtils.isNotBlank(map.get("pageSize"))){
             pageSize = Integer.valueOf(map.get("pageSize"));//页面数
         }
-        HyPunchClock hyPunchClock = new HyPunchClock();
+        HyPunchClockExpand hyPunchClock = new HyPunchClockExpand();
         if(StringUtils.isNotBlank(map.get("userId"))){
             hyPunchClock.setUserId(Long.valueOf(map.get("userId")));
         }
         if(StringUtils.isNotBlank(map.get("clockTime"))){
-            hyPunchClock.setClockTime(sdf.parse(map.get("clockTime")));
+            int length = map.get("clockTime").split("-").length;
+            hyPunchClock.setTimeLength(length);
+            if(length == 1){
+                hyPunchClock.setClockTime(sdf.parse(map.get("clockTime")+"-01-01"));
+            }
+            if(length == 2){
+                hyPunchClock.setClockTime(sdf.parse(map.get("clockTime")+"-01"));
+            }
+            if(length == 3){
+                hyPunchClock.setClockTime(sdf.parse(map.get("clockTime")));
+            }
         }
         if(StringUtils.isNotBlank(map.get("streetId"))){
             hyPunchClock.setStreetId(Long.valueOf(map.get("streetId")));
@@ -356,8 +367,9 @@ public class HyPunchClockServiceImpl implements HyPunchClockService {
      * @return
      */
     @Override
-    public List<HyPunchClock> getTodayHyPunchClockList(HyPunchClock hyPunchClock) {
+    public List<HyPunchClock> getTodayHyPunchClockList(HyPunchClockExpand hyPunchClock) {
         hyPunchClock.setClockTime(new Date());
+        hyPunchClock.setTimeLength(3);
         List<HyPunchClock> hyPunchClockList = hyPunchClockDaoSelf.queryAll(hyPunchClock);
         return hyPunchClockList;
     }

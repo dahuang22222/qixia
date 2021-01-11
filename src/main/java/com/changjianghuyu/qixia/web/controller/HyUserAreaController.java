@@ -1,5 +1,7 @@
 package com.changjianghuyu.qixia.web.controller;
 
+import com.changjianghuyu.qixia.web.common.BaseController;
+import com.changjianghuyu.qixia.web.common.jwt.UserInfo;
 import com.changjianghuyu.qixia.web.common.msg.HanderCode;
 import com.changjianghuyu.qixia.web.common.msg.MsgHander;
 import com.changjianghuyu.qixia.web.entity.HyUserArea;
@@ -16,7 +18,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping("/hyUserArea")
-public class HyUserAreaController {
+public class HyUserAreaController extends BaseController {
     /**
      * 服务对象
      */
@@ -43,6 +45,7 @@ public class HyUserAreaController {
     public MsgHander getHyUserAreaList(HyUserArea hyUserArea) {
         MsgHander msg = new MsgHander();
         msg.setMessage("获取成功");
+        UserInfo userInfo = getUserInfo();
         msg.setStatus(HanderCode.CONTROLLER_CODE_SUCCESS);
         try {
             msg.setContext(hyUserAreaService.queryHyUserAreaList(hyUserArea));

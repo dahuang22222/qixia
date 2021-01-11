@@ -17,10 +17,13 @@ spring:
   application:
     name: 'leidaex-wallet'
   datasource:
-    url: 'jdbc:mysql://175.24.42.155:3306/cjhy?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8'
+    url: 'jdbc:mysql://localhost:3306/cjhy?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8'
+#    url: 'jdbc:mysql://8.133.172.142:3306/cjhy?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8'
 #    url: 'jdbc:mysql://localhost:3306/cjhy?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8'
-    username: 'root'
-    password: 'root123..'
+#    username: 'root'
+#    password: 'root123..'
+    username: 'cjhy'
+    password: 'cjhy123..'
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     platform: mysql

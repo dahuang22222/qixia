@@ -62,8 +62,8 @@
     <!--通过实体作为筛选条件查询-->
     <select id="getVillagePunchClockDayListByTime" resultType="map" parameterType="map">
        SELECT
-        village_id villageId, village, street_id streetId, street, clock_date clockDate, COUNT(0) clockTimes
-        FROM village_punch_clock_day
+        village_id villageId, village, street_id streetId, street, clock_date clockDate, COUNT(0) clockTimes,DATE_FORMAT(clock_date ,"%Y-%m") tempDate
+        FROM (SELECT * FROM village_punch_clock_day  ORDER BY clock_date DESC) t1
         WHERE clock_status = 1
         <if test="clockDate != null">
             AND DATE_FORMAT(clock_date ,"%Y-%m")= #{clockDate}
@@ -77,7 +77,8 @@
         <if test="villageId != null">
             and village_id = #{villageId}
         </if>
-        GROUP BY village_id
+        GROUP BY village_id,tempDate
         ORDER BY create_time desc
     </select>
+
 </mapper>
